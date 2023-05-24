@@ -1,0 +1,58 @@
+body {
+  font-family: "Montserrat", sans-serif;
+}
+
+/* .container-fluid {
+  padding: 3% 15% 7%;
+} */
+
+/* Navigation Bar */
+.navbar-brand {
+  font-family: "ubuntu", sans-serif;
+}
+
+.navbar-custom {
+  background-color: #A75D5D;
+  color: #FFC3A1;
+}
+
+.navbar-btn-custom {
+  background-color: #D3756B;
+  border: none;
+}
+
+.navbar-login {
+  color: white;
+}
+
+.btn {
+  outline: none;
+}
+
+/* Headings */
+.big-heading {
+  font-size: 3.5rem;
+  color: white;
+}
+
+/* Title Section */
+#title {
+  background-color: #A75D5D;
+}
+
+/* Features */
+#features {
+  position: relative;
+}
+
+.features-icon {
+  color: #F0997D;
+}
+
+.features-icon:hover {
+  color: #FFC3A1;
+}
+
+.feature-description {
+  color: #8f8f8f;
+}

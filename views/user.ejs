@@ -1,0 +1,10 @@
+<%- include('partials/header') %>
+
+<h1> <%= viewedUser.username %> </h1>
+<p> <%= viewedUser.desc %> </p>
+
+<form class="" action="/users/<%= user._id %>/follow" method="post">
+  <button class="btn" type="submit" name="button">Follow</button>
+</form>
+
+<%- include('partials/footer') %>

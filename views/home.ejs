@@ -1,0 +1,79 @@
+<%- include('partials/header') %>
+<% if (isAuthenticated){ %>
+  <%- include('partials/menu_authenticated') %>
+<% } else { %>
+    <%- include('partials/menu_unauthenticated') %>
+<% } %>
+
+
+<!-- TITLE -->
+<section id="title" class="pt-5">
+
+  <div class="row">
+    <div class="col-md-6 text-col-position text-start heading-left p-5">
+      <h1 class="big-heading fw-bold lh-base p-5">Start eating with your eyes.</h1>
+      <button type="button" class="btn btn-dark btn-lg mt-3 ms-5 me-3"><i class="fa-brands fa-apple"></i> Download</button>
+      <button type="button" class="btn btn-outline-light btn-lg mt-3"><i class="fa-brands fa-google-play"></i> Download</button>
+    </div>
+    <div class="col-md-6 title-image-position">
+      <!-- <img class="title-img" src="" alt="iphone-mockup"> -->
+    </div>
+  </div>
+
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="">
+
+  <div class="row container mx-auto p-5 bg-white">
+
+    <div class="col-md-4 p-md-3 my-4">
+      <i class="fa-solid fa-bolt fa-4x features-icon"></i>
+      <h3 class="fw-bold fs-5 pt-3">Discover.</h3>
+      <p class="feature-description fs-6">Eat with your eyes first, and discover recipes from creators around the world.</p>
+    </div>
+
+    <div class="col-md-4 p-md-3 my-4">
+      <i class="fa-solid fa-magnifying-glass fa-4x features-icon"></i>
+      <h3 class="fw-bold fs-5 pt-3">Explore.</h3>
+      <p class="feature-description fs-6">Have an idea of what you're looking for? Explore our community of recipes and creators.</p>
+    </div>
+
+    <div class="col-md-4 p-md-3 my-4">
+      <i class="fa-solid fa-fire-flame-curved fa-4x features-icon"></i>
+      <h3 class="fw-bold fs-5 pt-3">Render.</h3>
+      <p class="feature-description fs-6">Cut the fat out of searching for recipes, and render a feed to your liking.</p>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- CALL TO ACTION -->
+<section id="cta">
+
+  <h3 class="fw-bold big-heading lh-base text-white">Start eating with your eyes today.</h3>
+  <button type="button" class="btn btn-dark btn-lg mt-3 me-2"><i class="fa-brands fa-apple"></i> Download</button>
+  <button type="button" class="btn btn-light btn-lg mt-3"><i class="fa-brands fa-google-play"></i> Download</button>
+
+</section>
+
+<!-- FOOTER -->
+<section id="footer" class="">
+
+  <div class="footer-socials text-dark pb-3">
+    <i class="fa-brands fa-twitter p-2"></i>
+    <i class="fa-brands fa-facebook p-2"></i>
+    <i class="fa-brands fa-instagram p-2"></i>
+    <i class="fa-solid fa-envelope p-2"></i>
+  </div>
+
+<div class="footer-copyright">
+    <p class="text-secondary">© Copyright 2023 Render</p>
+</div>
+
+</section>
+
+
+<%- include('partials/footer') %>

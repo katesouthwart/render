@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+
+<div>
+
+  <% requestedUsers.forEach(function(user){ %>
+    <div class="">
+
+    <h1> <%= user.username %> </h1>
+    <p> <%= user.desc %> </p>
+
+    <form class="" action="/users/<%= currentUser.id %>/requests/accept" method="post">
+      <input type="hidden" name="requesterId" value="<%= user.id %>">
+      <button type="submit" name="button">Accept</button>
+    </form>
+
+    <form class="" action="/users/<%= currentUser.id %>/requests/decline" method="post">
+      <input type="hidden" name="requesterId" value="<%= user.id %>">
+      <button type="submit" name="button">Decline</button>
+    </form>
+
+    </div>
+
+
+<%  }); %>
+
+
+</div>
+
+<%- include('partials/footer') %>
