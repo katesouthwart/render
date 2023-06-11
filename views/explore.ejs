@@ -1,0 +1,141 @@
+<div class="container">
+  <!-- search bar -->
+  <!-- <div class="col-md-3 text-end ms-auto d-inline">
+    <form class="" ">
+      <input type="search" name="searchTerm" class="form-control my-5" placeholder="Search..." aria-label="Search" value="">
+      <button class="btn btn-primary btn-dark btn-lg px-4 me-md-2" type="submit" name="search-button">Explore</button>
+    </form>
+  </div> -->
+
+  <div class="container my-5">
+  	<div class="row">
+          <div class="col-md-8 mx-auto">
+              <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <form class="d-flex w-100" action="/explore/search" method="post">
+                      <input type="search" name="searchTerm" class="form-control input-lg" placeholder="Search..." aria-label="Search"/>
+                      <span class="input-group-btn">
+                          <button class="btn btn-info btn-lg" type="submit" name="search-button">
+                              <i class="fas fa-search"></i>
+                          </button>
+                      </span>
+                    </form>
+
+                  </div>
+              </div>
+          </div>
+  	</div>
+  </div>
+
+  <!-- Explore latest and Random Recipe buttons -->
+  <div class="col-12 mt-5 text-center">
+    <a href="/explore/latest" class="btn btn-primary btn-dark form-submit-btn px-4 me-md-2">Explore Latest</a>
+    <a href="/explore/random" class="btn btn-outline-secondary form-add-btn px-4 me-md-2">Random Recipe</a>
+  </div>
+
+
+  <!-- Categories -->
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 g-lg-3 py-4 my-5">
+
+    <% if(categories != "") {%>
+    <% categories.forEach(function(category, index) { %>
+
+      <a href="../categories/<%= category.name %>" class="col text-center category-link">
+        <div class="category-icon">
+          <i class="<%= category.icon %> fa-4x features-icon"></i>
+        </div>
+        <div class="pt-1 fw-bold">
+          <%= category.name %>
+        </div>
+      </a>
+
+  <%  }) %>
+  <% } %>
+
+    <a href="/categories" class="col text-center category-link">
+      <div class="category-icon">
+        <i class="fas fa-4x features-icon fa-ellipsis"></i>
+      </div>
+      <div class="pt-1 fw-bold">
+        View All
+      </div>
+    </a>
+
+
+  </div>
+
+  <!-- Quick Recipes -->
+  <section class="pb-4 pt-4">
+    <div class="d-flex mb-2 align-items-center">
+      <h2 class="heading-white-bg fw-bold">Thirty Minutes or Less</h2>
+      <a href="/explore/ThirtyMinutesOrLess" class="ms-auto category-link fw-bold">View More</a>
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-2 g-lg-3">
+
+      <% if (food.thirtyMinsOrLess != "") { %>
+        <% food.thirtyMinsOrLess.forEach(function(recipe, index){ %>
+
+          <a href="/posts/<%= recipe._id %>" class="col text-center recipe-title-directory">
+            <div class="explore-img latest-img">
+              <img src="/uploads/<%= recipe.img %>" alt="<%= recipe.title %>" loading="lazy">
+            </div>
+          <div class="pt-1"><%= recipe.title %></div>
+          </a>
+
+        <% }) %>
+      <% } else { %>
+        <p>No Items Found.</p>
+      <% } %>
+
+    </div>
+
+
+  </section>
+
+  <!-- Latest Recipes -->
+  <section class="pb-4 pt-4">
+    <div class="d-flex mb-2 align-items-center">
+      <h2 class="heading-white-bg fw-bold">Latest Recipes</h2>
+      <a href="/explore/latest" class="ms-auto category-link fw-bold">View More</a>
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-2 g-lg-3">
+
+      <% if (food != "") { %>
+        <% food.latest.forEach(function(recipe, index){ %>
+
+          <a href="/posts/<%= recipe._id %>" class="col text-center recipe-title-directory">
+            <div class="explore-img latest-img">
+              <img src="/uploads/<%= recipe.img %>" alt="<%= recipe.title %>" loading="lazy">
+            </div>
+          <div class="pt-1"><%= recipe.title %></div>
+          </a>
+
+        <% }) %>
+      <% } else { %>
+        <p>No Items Found.</p>
+      <% } %>
+
+    </div>
+
+
+  </section>
+
+
+
+<!-- Create Recipe CTA -->
+  <section class="px-4 py-5 my-5 text-center">
+      <img src="" class="d-block mx-auto mb-4 img-fluid create-recipe-cta-img" alt="Publish your recipe for FREE today!" loading="lazy">
+      <h1 class="display-5 fw-bold">Publish your recipe for FREE today!</h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">Share your recipe with thousands of people for free!</p>
+        <div class="">
+          <a href="/posts/create" class="btn btn-primary btn-dark btn-lg">Create Recipe</a>
+        </div>
+      </div>
+
+  </section>
+
+
+</div>

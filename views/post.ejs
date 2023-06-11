@@ -1,0 +1,77 @@
+<% if(post != null ) { %>
+
+
+<div class="container">
+
+  <div class="row col-12 col-lg-10 mx-auto mb-5">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb my-4">
+        <li class="breadcrumb-item"><a href="/explore">Explore</a></li>
+        <li class="breadcrumb-item"><a href="/<%= post.category %>"><%= post.category %> Recipes</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><%= post.title %></li>
+      </ol>
+    </nav>
+
+    <div class="col-12 col-lg-5 col-xl-4 pb-4">
+      <img src="/uploads/<%= post.img %>" alt="<%= post.title %>" class="img-fluid sticky-top post-img" loading="lazy">
+    </div>
+
+    <div class="col-12 col-lg-5 col-xl-8 pb-3">
+      <div class="row">
+        <div class="col-12">
+          <h1><%= post.title %></h1>
+        </div>
+        <a href="/categories/<%= post.category %>"><i class="fas fa-tag me-2 mb-3"></i><%= post.category %></a>
+        <a href="/users/<%= author._id %>"><i class="fa-solid fa-user me-2 mb-3"></i><%= author.username %></a>
+
+        <div class="col-12">
+          <%= post.desc %>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="row pt-4 align-items-start">
+
+      <div class="row col-12 col-lg-4 pb-5">
+        <h4>Ingredients</h4>
+        <ul class="list-group list-group-flush">
+
+          <% post.ingredients.forEach(function(ingredient, index){ %>
+          <li class="list-group-item"><%= ingredient %></li>
+          <% }); %>
+        </ul>
+      </div>
+
+
+
+      <div class="row col-12 col-lg-8 ms-lg-4 pb-5">
+        <h4>Directions</h4>
+        <ul class="list-group list-group-flush">
+
+          <% post.instructions.forEach(function(step, index){ %>
+          <li class="list-group-item"><%= step %></li>
+          <% }); %>
+        </ul>
+      </div>
+
+
+
+    </div>
+
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+  <% } else {%>
+  <p>Recipe not found.</p>
+  <% } %>

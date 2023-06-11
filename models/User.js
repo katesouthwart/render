@@ -19,18 +19,14 @@ const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
   },
-  // password: {
-  //   type: String,
-  //   required: true,
-  //   min: 6
-  // },
+
   profilePicture: {
     type: String,
-    default: ""
+    default: "flame.PNG"
   },
-  coverPicture: {
+  headerPicture: {
     type: String,
-    default: ""
+    default: "flame header.png"
   },
   followers: {
     type: Array,
@@ -64,9 +60,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     max: 50
   },
-  relationship: {
-    type: Number,
-    enum: [1, 2, 3],
+  isAuthor: {
+    type: Boolean,
+    default: false
   },
 },
 {timestamps: true}
@@ -77,4 +73,4 @@ userSchema.plugin(passportLocalMongoose, { usernameField : 'email' });
 
 userSchema.plugin(findOrCreate);
 
-module.exports = mongoose.model("User", userSchema);
+const userModel = module.exports = mongoose.model("User", userSchema);

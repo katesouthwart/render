@@ -19,7 +19,7 @@ router.post("/register", async (req, res) => {
 
     if(newUser){
       passport.authenticate("local")(req, res, function(){
-        res.redirect("/users/timeline/all");
+        res.redirect("/posts/timeline/all");
       });
     } else {
       res.statue(500).json(err);
@@ -40,7 +40,7 @@ router.get("/login", (req, res) => {
 });
 
 router.post("/login", passport.authenticate("local", {
-  successRedirect: "/users/timeline/all",
+  successRedirect: "/posts/timeline/all",
   failureRedirect: "/auth/login"
 
 }));
@@ -53,7 +53,7 @@ router.get("/google",
 router.get("/google/timeline/all",
   passport.authenticate("google", {failureRedirect: "/login"}),
   function (req, res) {
-    res.redirect("/timeline/all");
+    res.redirect("/posts/timeline/all");
   });
 
 //LOGOUT

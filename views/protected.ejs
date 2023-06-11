@@ -1,12 +1,10 @@
-<%- include('partials/header') %>
 
-<h1> <%= user.username %> </h1>
-<p> <%= user.desc %> </p>
 
-<form class="" action="/users/<%= user._id %>/follow" method="post">
+<h1> <%= viewedUser.username %> </h1>
+<p> <%= viewedUser.desc %> </p>
+
+<form class="" action="/users/<%= viewedUser._id %>/follow" method="post">
   <button class="btn" type="submit" name="button">Follow</button>
 </form>
 
 <h3>This user's posts are protected.</h3>
-
-<%- include('partials/footer') %>

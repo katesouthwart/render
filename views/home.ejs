@@ -1,13 +1,5 @@
-<%- include('partials/header') %>
-<% if (isAuthenticated){ %>
-  <%- include('partials/menu_authenticated') %>
-<% } else { %>
-    <%- include('partials/menu_unauthenticated') %>
-<% } %>
-
-
 <!-- TITLE -->
-<section id="title" class="pt-5">
+<section id="title-area" class="pt-5">
 
   <div class="row">
     <div class="col-md-6 text-col-position text-start heading-left p-5">
@@ -25,7 +17,7 @@
 <!-- FEATURES -->
 <section id="features" class="">
 
-  <div class="row container mx-auto p-5 bg-white">
+  <div class="row container mx-auto p-5 bg-white text-center">
 
     <div class="col-md-4 p-md-3 my-4">
       <i class="fa-solid fa-bolt fa-4x features-icon"></i>
@@ -60,7 +52,7 @@
 </section>
 
 <!-- FOOTER -->
-<section id="footer" class="">
+<section id="contact" class="">
 
   <div class="footer-socials text-dark pb-3">
     <i class="fa-brands fa-twitter p-2"></i>
@@ -69,11 +61,6 @@
     <i class="fa-solid fa-envelope p-2"></i>
   </div>
 
-<div class="footer-copyright">
-    <p class="text-secondary">© Copyright 2023 Render</p>
-</div>
+
 
 </section>
-
-
-<%- include('partials/footer') %>

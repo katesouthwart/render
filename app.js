@@ -1,13 +1,17 @@
 const express = require("express");
+const port = process.env.PORT || 3000;
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const ejs = require("ejs");
+const expressLayouts = require("express-ejs-layouts");
 const usersRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const postsRoute = require("./routes/posts");
+const exploreRoute = require("./routes/explore");
+const categoryRoute = require("./routes/categories");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
@@ -15,10 +19,16 @@ const User = require("./models/User");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const MongoStore = require("connect-mongo");
+const fileUpload = require("express-fileupload");
+const cookieParser = require("cookie-parser");
+const flash = require("connect-flash");
+
 
 dotenv.config();
 app.use(express.static("public"));
 app.set("view engine", "ejs");
+app.use(expressLayouts);
+app.set("layout", "./layouts/main");
 
 mongoose.connect(process.env.MONGO_URL)
   .then(function(){
@@ -31,6 +41,16 @@ app.use(express.urlencoded({extended: true}));
 app.use(helmet());
 app.use(morgan("common"));
 
+//contradicts our previously set app.use for sessions, look into this and why? Fore flash messages and file uploader supposedly
+app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
+// app.use(session({
+//   secret: "CookingBlogSecretSession",
+//   saveUninitialized: true,
+//   resave: true
+// }));
+app.use(flash());
+app.use(fileUpload());
+
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -41,7 +61,8 @@ app.use(
       imgSrc: ["'self'", 'data:'],
       objectSrc: ["'none'"],
       mediaSrc: ["'none'"],
-      frameSrc: ["'none'"]
+      frameSrc: ["'none'"],
+      scriptSrcAttr: ["'unsafe-inline'"],
     }
   })
 );
@@ -99,12 +120,14 @@ app.use((req, res, next) => {
 app.use("/users", usersRoute);
 app.use("/auth", authRoute);
 app.use("/posts", postsRoute);
+app.use("/categories", categoryRoute);
+app.use("/explore", exploreRoute);
 
 app.get("/", (req, res) => {
   res.render("home");
 });
 
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000.");
+app.listen(port, () => {
+  console.log("Server is listening on port" + port + ".");
 });

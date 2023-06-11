@@ -2,14 +2,15 @@ const User = require("../models/User");
 const router = require("express").Router();
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
+const Post = require("../models/Post");
 
 //update user
 router.get("/:id/settings", (req, res) =>{
-  res.render("user_settings");
+  res.render("user_settings", { title: "Settings" } );
 })
 
 router.put("/:id/settings", async (req, res) => {
-  if (req.user && req.user.id === req.params.id || req.body.isAdmin) {
+  if (req.user && req.user.id === req.params.id || req.user.isAdmin) {
 
     if (req.body.password) {
       const currentUser = await User.findById(req.user.id);
@@ -45,7 +46,7 @@ router.put("/:id/settings", async (req, res) => {
 
 //delete user
 router.delete("/:id", async (req, res) => {
-  if (req.user && req.user.id === req.params.id || req.body.isAdmin) {
+  if (req.user && req.user.id === req.params.id || req.user.isAdmin) {
 
     try {
       const currentUser = await User.findByIdAndDelete(req.user.id);
@@ -66,15 +67,17 @@ router.get("/:id", async (req, res) => {
     const viewedUser = await User.findById(req.params.id);
     const currentUser = await User.findById(req.user.id);
     const {password, updatedAt, requestedTo, requestedBy, email, isAdmin, ...other} = viewedUser._doc
+    const limitNumber = 20;
+    const posts = await Post.find({ author: req.params.id}).sort({ _id: -1}).limit(limitNumber);
 
     if (req.user && req.user.id !== req.params.id) {
 
       if (!viewedUser.isPrivate) {
-          res.render("user", {viewedUser: other});
+          res.render("user", {viewedUser: other, posts});
       } else {
 
         if (viewedUser.followers.includes(currentUser.id)) {
-            res.render("user", {viewedUser: other});
+            res.render("user", {viewedUser: other, posts});
         } else {
           res.render("protected", {viewedUser: other});
         }
@@ -83,7 +86,7 @@ router.get("/:id", async (req, res) => {
 
     } else {
 
-      res.render("profile", {profile: other});
+      res.render("profile", {profile: other, posts});
     }
   } catch (err) {
     res.status(500).json(err);

@@ -1,9 +1,126 @@
-<%- include('partials/header') %>
-
-<p>
-  look at all these posts!
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-lg-8 mx-auto mb-5">
 
 
 
-<%- include('partials/footer') %>
+
+
+
+      <div class="row py-4">
+
+        <% if(allPosts != "") { %>
+        <% allPosts.forEach(function(post, index) { %>
+
+
+          <% if (post.author.toString() === currentUser.id) { %>
+
+
+            <div class="py-3 col-11 mx-auto border-top border-light-subtle ">
+              <div class="d-flex">
+
+
+                <a href="/posts/<%= post.id %>" class="profile-post-img col-2 me-3">
+                  <img src="/uploads/<%= post.img %>" alt="<%= post.title %>" loading="lazy">
+                </a>
+
+                <div class="row col-12">
+                  <div class="d-flex col-10">
+                      <h4><a href="/posts/<%= post.id %>" class="profile-title"><%= post.title %></a></h4>
+
+                    <div class="dropdown ms-auto">
+                      <button class="btn post-edit-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/posts/<%= post.id %>/edit">Edit</a></li>
+                        <li><a class="dropdown-item" href="/posts/<%= post.id %>/delete">Delete</a></li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <p><%= post.desc %></p>
+                  <div class="row col-12">
+                    <div class="row col-4">
+                      <a href="/categories/<%= post.category %>" class="profile-link"><i class="fa-solid fa-tag profile-icon-color me-2"></i><%= post.category %></a>
+                    </div>
+                    <div class="row col-4">
+                      <p><i class="fa-regular fa-clock profile-icon-color me-2"></i><%= post.totalMins %> Minutes</p>
+                    </div>
+                    <div class="row col-2">
+                      <a href="/posts/<%= post.id %>/like" class="profile-link"><i class="fa-regular fa-heart profile-icon-color me-2"></i><%= post.likes.length %></a>
+                    </div>
+                    <div class="row col-2">
+                      <a href="/posts/<%= post.id %>/save" class="profile-link"><i class="fa-regular fa-bookmark profile-icon-color me-2"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <% } else { %>
+              <div class="py-3 col-11 mx-auto border-top border-light-subtle ">
+                <div class="d-flex">
+
+
+                <a href="/posts/<%= post.id %>" class="profile-post-img col-2 me-3">
+                  <img src="/uploads/<%= post.img %>" alt="<%= post.title %>" loading="lazy">
+                </a>
+
+                <div class="row col-12">
+                  <h4><a href="/posts/<%= post.id %>" class="profile-title"><%= post.title %></a></h4>
+                  <p><%= post.desc %></p>
+                  <div class="row col-12">
+                    <div class="row col-4">
+                      <a href="/categories/<%= post.category %>" class="profile-link"><i class="fa-solid fa-tag profile-icon-color me-2"></i><%= post.category %></a>
+                    </div>
+                    <div class="row col-4">
+                      <p><i class="fa-regular fa-clock profile-icon-color me-2"></i><%= post.totalMins %> Minutes</p>
+                    </div>
+                    <div class="row col-2">
+                      <a href="/posts/<%= post.id %>/like" class="profile-link"><i class="fa-regular fa-heart profile-icon-color me-2"></i><%= post.likes.length %></a>
+                    </div>
+                    <div class="row col-2">
+                      <a href="/posts/<%= post.id %>/save" class="profile-link"><i class="fa-regular fa-bookmark profile-icon-color me-2"></i></a>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+            <% } %>
+
+
+
+
+
+        <% }) %>
+        <% } else { %>
+          <div class="row">
+            <div class="py-3 mx-auto col-11 text-center border-top border-light-subtle">
+              <p>No posts yet!</p>
+            </div>
+          </div>
+
+        <% } %>
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+
+    </div>
+
+  </div>
+
+
+
+
+</div>
