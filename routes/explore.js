@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Category = require("../models/Category");
 const Post = require("../models/Post");
 const User = require("../models/User");
+const paginateResults = require("../public/js/pagination");
 
 
 router.get("/", async (req, res) => {
@@ -18,7 +19,7 @@ router.get("/", async (req, res) => {
     //
     // const american = await Post.find({ "category": "American", author: { $in: nonPrivateUsers } }).sort({_id: -1}).limit(limitNumber);
     //
-    const thirtyMinsOrLess = await Post.find({ totalMins: { $lt: 30}, author: { $in: nonPrivateUsers } }).sort({_id: -1}).limit(limitNumber);
+    const thirtyMinsOrLess = await Post.find({ totalMins: { $lt: 31}, author: { $in: nonPrivateUsers } }).sort({_id: -1}).limit(limitNumber);
 
     const food = { latest, thirtyMinsOrLess };
 
@@ -30,27 +31,52 @@ router.get("/", async (req, res) => {
 
 });
 
-router.post("/search", async (req, res) => {
+router.get("/search", async (req, res) => {
 
   try{
-    const searchTerm = req.body.searchTerm;
-    const limitNumber = 20;
+    const searchTerm = req.query.searchTerm;
     const nonPrivateUsers = await User.find({ isPrivate: false});
-    const posts = await Post.find( { author: { $in: nonPrivateUsers }, $text: { $search: searchTerm, $diacriticSensitive: true } } ).sort({ _id: -1 }).limit(limitNumber);;
-    res.render("search", { title: "Render - Search", posts, searchTerm });
+    const posts = await Post.find( { author: { $in: nonPrivateUsers }, $text: { $search: searchTerm, $diacriticSensitive: true } } ).sort({ _id: -1 });
+
+    await paginateResults(req, res, posts, {});
+
+    const paginatedResults = res.paginatedResults;
+
+    res.render("search", {
+      title: "Render - Search",
+      posts: paginatedResults.results,
+      previousPage: paginatedResults.previous ? paginatedResults.previous.page : null,
+      nextPage: paginatedResults.next ? paginatedResults.next.page : null,
+      currentPage: req.query.page || 1,
+      totalPages: Math.ceil(posts.length / 20),
+      searchTerm });
   } catch (err) {
     res.status(500).json(err);
   }
 
 });
 
+
+
 router.get("/latest", async (req, res) => {
 
   try {
-    const limitNumber = 20;
+
     const nonPrivateUsers = await User.find({ isPrivate: false});
-    const posts = await Post.find({ author: { $in: nonPrivateUsers }}).sort({ _id: -1 }).limit(limitNumber);
-    res.render("latest", { title: "Render - Explore Latest", posts });
+    const posts = await Post.find({ author: { $in: nonPrivateUsers }}).sort({ _id: -1 });
+
+    await paginateResults(req, res, posts, {});
+
+    const paginatedResults = res.paginatedResults;
+
+    res.render("latest", {
+      title: "Render - Explore Latest",
+      posts: paginatedResults.results,
+      previousPage: paginatedResults.previous ? paginatedResults.previous.page : null,
+      nextPage: paginatedResults.next ? paginatedResults.next.page : null,
+      currentPage: req.query.page || 1,
+      totalPages: Math.ceil(posts.length / 20)
+     });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -60,10 +86,21 @@ router.get("/latest", async (req, res) => {
 router.get("/ThirtyMinutesOrLess", async (req, res) => {
 
   try {
-    const limitNumber = 20;
     const nonPrivateUsers = await User.find({ isPrivate: false});
-    const posts = await Post.find({ author: { $in: nonPrivateUsers }, totalMins: { $lt: 30} }).sort({ _id: -1 }).limit(limitNumber);
-    res.render("thirty_minutes", { title: "Render - 30 Minutes or less", posts });
+    const posts = await Post.find({ author: { $in: nonPrivateUsers }, totalMins: { $lt: 31} }).sort({ _id: -1 });
+
+    await paginateResults(req, res, posts, {});
+
+    const paginatedResults = res.paginatedResults;
+
+    res.render("thirty_minutes", {
+      title: "Render - 30 Minutes or less",
+      posts: paginatedResults.results,
+      previousPage: paginatedResults.previous ? paginatedResults.previous.page : null,
+      nextPage: paginatedResults.next ? paginatedResults.next.page : null,
+      currentPage: req.query.page || 1,
+      totalPages: Math.ceil(posts.length / 20)
+    });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -89,22 +126,6 @@ router.get("/random", async (req, res) => {
   }
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

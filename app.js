@@ -55,7 +55,7 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'", 'ka-f.fontawesome.com'],
-      scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'kit.fontawesome.com'],
+      scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'kit.fontawesome.com', 'https://code.jquery.com/jquery-3.7.0.min.js'],
       styleSrc: ["'self'", "'unsafe-inline'", 'https://stackpath.bootstrapcdn.com', 'https://cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'use.fontawesome.com'],
       fontSrc: ["'self'", 'https://stackpath.bootstrapcdn.com', 'https://cdnjs.cloudflare.com', 'use.fontawesome.com', 'ka-f.fontawesome.com'],
       imgSrc: ["'self'", 'data:'],
@@ -124,7 +124,12 @@ app.use("/categories", categoryRoute);
 app.use("/explore", exploreRoute);
 
 app.get("/", (req, res) => {
-  res.render("home");
+
+  if (req.user) {
+    res.redirect("/posts/timeline/all");
+  } else {
+    res.render("home");
+  }
 });
 
 

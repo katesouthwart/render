@@ -17,6 +17,7 @@ router.post("/create", async (req, res) => {
 
   try {
 
+    //Image upload
     let imageUploadFile;
     let uploadPath;
     let newImageName;
@@ -24,7 +25,6 @@ router.post("/create", async (req, res) => {
     if (!req.files || Object.keys(req.files).length === 0) {
       console.log("No files uplaoded");
     } else {
-
       imageUploadFile = req.files.img;
       newImageName = Date.now() + imageUploadFile.name;
 
@@ -33,31 +33,43 @@ router.post("/create", async (req, res) => {
       imageUploadFile.mv(uploadPath, function(err) {
         if (err) return res.status(500).send(err);
       });
-
     }
 
-
-    const prepHours = req.body.prepHours || 0;
-    const cookHours = req.body.cookHours || 0;
-    const prepMins = req.body.prepMins || 0;
-    const cookMins = req.body.cookMins || 0;
+    //Time
+    let prepMins = req.body.prepMins || 0;
+      prepMins = prepMins.toString().padStart(2, '0');
+    let prepHours = req.body.prepHours || 0;
+      prepHours = prepHours.toString().padStart(2, '0');
+    let cookMins = req.body.cookMins || 0;
+      cookMins = cookMins.toString().padStart(2, '0');
+    let cookHours = req.body.cookHours || 0;
+      cookHours = cookHours.toString().padStart(2, '0');
 
     const totalMins = Number(prepHours * 60) + Number(cookHours * 60) + Number(prepMins) + Number(cookMins);
 
+    let displayHours = Number(Math.floor(totalMins / 60));
+      displayHours =  displayHours.toString().padStart(2, '0');
+    let displayMins = Number(totalMins % 60);
+      displayMins =  displayMins.toString().padStart(2, '0');
+
+    //Post Creation
     const newPost = new Post({
       author: req.body.author,
       title: req.body.title,
       desc: req.body.desc,
       img: newImageName,
+      // img: "flame header.png",
       ingredients: req.body.ingredients,
       instructions: req.body.instructions,
       category: req.body.category,
       servings: req.body.servings,
-      prepHours: req.body.prepHours,
-      prepMins: req.body.prepMins,
-      cookHours: req.body.cookHours,
-      cookMins: req.body.cookMins,
-      totalMins: totalMins
+      prepHours: prepHours,
+      prepMins: prepMins,
+      cookHours: cookHours,
+      cookMins: cookMins,
+      totalMins: totalMins,
+      displayHours: displayHours,
+      displayMins: displayMins
     });
 
     const savedPost = await newPost.save();
@@ -75,8 +87,6 @@ router.post("/create", async (req, res) => {
         res.status(500).json(err);
       }
     }
-
-    req.flash("infoSubmit", "Recipe has been posted.");
     res.redirect("/posts/" + savedPost.id);
   } catch (err) {
     req.flash("infoErrors", err);
@@ -147,26 +157,77 @@ router.delete("/:id/delete", async (req, res) => {
 router.put("/:id/like", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post.likes.includes(req.user.id)) {
-      await post.updateOne({
-        $push: {
-          likes: req.user.id
-        }
-      });
-      res.status(200).json("The post has been liked.");
+
+    if (req.user) {
+
+      if (!post.likes.includes(req.user.id)) {
+        await post.updateOne({ $push: { likes: req.user.id } });
+        res.status(200).json("The post has been liked.");
+      } else {
+        await post.updateOne({ $pull: { likes: req.user.id } });
+        res.status(200).json("The post has been un-liked.");
+      }
+
     } else {
-      await post.updateOne({
-        $pull: {
-          likes: req.user.id
-        }
-      });
-      res.status(200).json("The post has been un-liked.");
+      res.redirect("/auth/login");
     }
+
   } catch (err) {
     res.status(500).json(err);
   }
-
 });
+
+//Save / un-save a posts
+router.put("/:id/save", async (req, res) => {
+  //test functionality once frontend
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (req.user) {
+
+      if (!post.saves.includes(req.user.id)) {
+        await post.updateOne({ $push: { saves: req.user.id } });
+        res.status(200).json("The post has been saved.");
+      } else {
+        await post.updateOne({ $pull: { saves: req.user.id } });
+        res.status(200).json("The post has been un-saved");
+      }
+
+    } else {
+      res.redirect("/auth/login");
+    }
+
+  } catch (err) {
+    res.status(500).json(err);
+  }
+})
+
+//Submit rating for a post
+router.post("/:id/rate", async (req, res) => {
+  //test functionality once frontend
+  try {
+    const postId = req.params.id;
+    const currentUserId = req.user.id;
+    const rating = req.body.rating;
+
+    const post = await Post.findOne({ _id: postId, 'reviews.user': userId});
+    if (post) {
+      await Post.updateOne(
+        { _id: postId, 'reviews.user': userId },
+        { $set : { 'reviews.$.rating': rating } }
+      );
+    } else {
+      await Post.findByIdAndUpdate(postId, {
+        $push: {reviews: {user: currentUserId, rating: rating } }
+      });
+    }
+    res.status(200).json("Rating submitted successfully.");
+
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 
 //Get a post
 router.get("/:id", async (req, res) => {
@@ -206,9 +267,7 @@ router.get("/timeline/all", async (req, res) => {
 
   try {
     const currentUser = await User.findById(req.user.id);
-    const currentUserPosts = await Post.find({
-      author: currentUser.id
-    });
+    const currentUserPosts = await Post.find({ author: currentUser.id });
     const friendPosts = await Promise.all(
       currentUser.following.map((friendId) => {
         return Post.find({
@@ -220,22 +279,24 @@ router.get("/timeline/all", async (req, res) => {
     let allPosts = [...currentUserPosts, ...friendPosts.flat()];
     allPosts = allPosts.sort((a, b) => b.createdAt - a.createdAt);
 
-    // Pagination
-    const page = parseInt(req.query.page) || 1; // Get the requested page number
-    const pageSize = 20; // Number of posts per page
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = page * pageSize;
-    const paginatedPosts = allPosts.slice(startIndex, endIndex);
 
+    // Pagination
+    const currentPage = parseInt(req.query.page) || 1;
+    const pageSize = 10;
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = currentPage * pageSize;
+    const paginatedResults = {};
+    paginatedResults.results = allPosts.slice(startIndex, endIndex);
 
     res.render("timeline", {
       title: "Render - Timeline",
-      allPosts: paginatedPosts,
-      currentUser,
-      currentPage: page,
-      totalPages: Math.ceil(allPosts.length / pageSize),
+      paginatedResults,
+      currentPage,
+      currentUser
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 

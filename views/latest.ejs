@@ -8,24 +8,28 @@
     </ol>
   </nav>
 
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-2 g-lg-3 mb-4 py-4">
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-2 g-lg-3 mb-4 py-4">
 
-      <% if (posts != "") { %>
-        <% posts.forEach(function(recipe, index){ %>
+    <% if (posts != "") { %>
+    <% posts.forEach(function(recipe, index){ %>
 
-          <a href="/posts/<%= recipe._id %>" class="col text-center recipe-title-directory">
-            <div class="explore-img latest-img">
-              <img src="/uploads/<%= recipe.img %>" alt="<%= recipe.title %>" loading="lazy">
-            </div>
-          <div class="pt-1"><%= recipe.title %></div>
-          </a>
+    <a href="/posts/<%= recipe._id %>" class="col text-center recipe-title-directory">
+      <div class="explore-img latest-img">
+        <img src="/uploads/<%= recipe.img %>" alt="<%= recipe.title %>" loading="lazy">
+      </div>
+      <div class="pt-1"><%= recipe.title %></div>
+    </a>
 
-        <% }) %>
-      <% } else { %>
-        <p>No Items Found.</p>
-      <% } %>
+    <% }) %>
+    <% } else { %>
+    <p>No Items Found.</p>
+    <% } %>
 
-    </div>
+  </div>
+
+  <div class="py-5">
+    <%- include("partials/pagination"); -%>
+  </div>
 
 
 </div>

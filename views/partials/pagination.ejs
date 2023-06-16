@@ -1,0 +1,30 @@
+<% if (typeof searchTerm != "undefined") {%>
+
+  <div class="text-center" id="pagination">
+
+    <% if (previousPage) { %>
+    <a href="?searchTerm=<%= searchTerm %>&page=<%= previousPage %>" class="previous">Previous</a>
+    <% } %>
+
+    <span class="page-info">Page <%= currentPage %> of <%= totalPages %></span>
+
+    <% if (nextPage) { %>
+    <a href="?searchTerm=<%= searchTerm %>&page=<%= nextPage %>" class="next">Next</a>
+    <% } %>
+
+  </div>
+
+<% } else { %>
+  <div class="text-center" id="pagination">
+    <% if (previousPage) { %>
+    <a href="?page=<%= previousPage %>" class="previous">Previous</a>
+    <% } %>
+
+    <span class="page-info">Page <%= currentPage %> of <%= totalPages %></span>
+
+    <% if (nextPage) { %>
+    <a href="?page=<%= nextPage %>" class="next">Next</a>
+    <% } %>
+  </div>
+
+<% }%>

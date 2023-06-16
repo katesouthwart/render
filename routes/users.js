@@ -70,24 +70,35 @@ router.get("/:id", async (req, res) => {
     const limitNumber = 20;
     const posts = await Post.find({ author: req.params.id}).sort({ _id: -1}).limit(limitNumber);
 
-    if (req.user && req.user.id !== req.params.id) {
 
-      if (!viewedUser.isPrivate) {
-          res.render("user", {viewedUser: other, posts});
-      } else {
+    // Pagination
+    const currentPage = parseInt(req.query.page) || 1;
+    const pageSize = 10;
 
-        if (viewedUser.followers.includes(currentUser.id)) {
-            res.render("user", {viewedUser: other, posts});
-        } else {
-          res.render("protected", {viewedUser: other});
-        }
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = currentPage * pageSize;
+    const paginatedResults = {};
+    paginatedResults.results = posts.slice(startIndex, endIndex);
 
-      }
-
+    if (currentUser && currentUser.id === viewedUser.id) {
+      res.render("profile", {
+        title: viewedUser.username,
+        profile: other,
+        paginatedResults,
+        currentPage
+      });
+    } else if (!viewedUser.isPrivate || viewedUser.followers.includes(currentUser.id)) {
+      res.render("user", {
+        title: viewedUser.username,
+        viewedUser: other,
+        paginatedResults,
+        currentPage
+      });
     } else {
-
-      res.render("profile", {profile: other, posts});
+      res.render("protected", {viewedUser: other});
     }
+
+
   } catch (err) {
     res.status(500).json(err);
   }
@@ -173,24 +184,40 @@ router.post("/:id/follow", async (req, res) => {
 
 router.get("/:id/requests", async (req, res) => {
 
-
-  if (req.user && req.user.id === req.params.id) {
-
     try {
+      if (req.user && req.user.id === req.params.id) {
+      const currentUser = req.user.id;
+      const foundUsers = await User.find({ requestedTo: req.params.id});
 
-      const foundUsers = await User.find({"requestedTo": req.params.id});
-      if (foundUsers) {
-        res.render("requests", { requestedUsers: foundUsers, currentUser: req.user });
+      // Pagination
+      const currentPage = parseInt(req.query.page) || 1;
+      const pageSize = 10;
+
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = currentPage * pageSize;
+      const paginatedResults = {};
+      paginatedResults.results = foundUsers.slice(startIndex, endIndex);
+
+
+      if (foundUsers.length > 0) {
+        res.render("requests", {
+          title: "Render - Follower Requests",
+          requestedUsers: foundUsers,
+          paginatedResults,
+          currentPage,
+          currentUser
+        });
       } else {
-        res.render("requests");
+        res.render("requests", {
+          title: "Render - Follower Requests",
+        });
       }
-
-    } catch (err) {
-      res.status(500).json(err);
+    } else {
+      return res.status(403).json("You can only access requests for your own account!");
     }
-
-  } else {
-    return res.status(403).json("You can only access requests for your own account!");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
   }
 
 });

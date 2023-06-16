@@ -28,12 +28,12 @@
 
 
 
-      <div class="row py-4">
+      <div class="row py-4" id="posts-container">
 
-        <% if(posts != "") { %>
-        <% posts.forEach(function(post, index) { %>
+        <% if(paginatedResults.length != "") { %>
+        <% paginatedResults.results.forEach(function(post, index) { %>
 
-        <div class="py-3 col-11 mx-auto border-top border-light-subtle ">
+        <div class="py-3 col-11 mx-auto border-top border-light-subtle profile-post">
           <div class="d-flex">
 
 
@@ -57,13 +57,13 @@
               </div>
 
               <p><%= post.desc %></p>
-              <div class="row col-12">
+              <div class="row col-12 align-items-end">
                 <div class="row col-4">
                   <a href="/categories/<%= post.category %>" class="profile-link"><i class="fa-solid fa-tag profile-icon-color me-2"></i><%= post.category %></a>
                 </div>
 
                 <div class="row col-4">
-                  <p><i class="fa-regular fa-clock profile-icon-color me-2"></i><%= post.totalMins %> Minutes</p>
+                  <p class="mb-0"><i class="fa-regular fa-clock profile-icon-color me-2"></i><%= post.displayHours %>:<%= post.displayMins %></p>
                 </div>
                 <div class="row col-2">
                   <a href="/posts/<%= post.id %>/like" class="profile-link"><i class="fa-regular fa-heart profile-icon-color me-2"></i><%= post.likes.length %></a>
@@ -82,30 +82,22 @@
 
 
         <% }) %>
-        <% } else { %>
-          <div class="row">
-            <div class="py-3 mx-auto col-11 text-center border-top border-light-subtle">
-              <p>No posts yet!</p>
-            </div>
-          </div>
         <% } %>
 
 
 
 
       </div>
-
-
-
-
-
-
+      <p class="no-more-posts d-none text-center py-5">No Posts Found!</p>
 
 
     </div>
 
   </div>
-
+  <input type="hidden" id="currentPage" value="<%= currentPage %>">
+  <div class="load-more-posts"></div>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="/js/infinite-pagination.js"></script>
 
 
 

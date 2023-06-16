@@ -3,10 +3,6 @@ const User = require("./User");
 
 const postSchema = new mongoose.Schema({
 
-  // userId: {
-  //   type: String,
-  //   required: true
-  // },
   title: {
     type: String,
     required: true,
@@ -35,6 +31,23 @@ const postSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
+  saves: {
+    type: Array,
+    default: []
+  },
+  reviews: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectID, 
+        ref: "User"
+      },
+      rating: {
+        type: Number,
+        min: 1,
+        max: 5
+      }
+    }
+  ],
   category: {
     type: String,
     enum: ['American', 'Mexican', 'Italian', 'Chinese', 'Mediterranean', 'Indian', 'Dessert', 'Cocktail', 'British', 'French'],
@@ -46,27 +59,25 @@ const postSchema = new mongoose.Schema({
     min: 1
   },
   prepHours: {
-    type: Number,
-    min: 0
+    type: String
   },
   prepMins: {
-    type: Number,
-    required: true,
-    min: 0,
-    max: 59
+    type: String
   },
   cookHours: {
-    type: Number,
-    min: 0
+    type: String,
   },
   cookMins: {
-    type: Number,
-    required: true,
-    min: 0,
-    max: 59
+    type: String
   },
   totalMins:{
     type: Number,
+  },
+  displayHours: {
+    type: String,
+  },
+  displayMins: {
+    type: String,
   },
   author:{
     type: mongoose.Types.ObjectId,

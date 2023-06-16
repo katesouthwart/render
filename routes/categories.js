@@ -2,6 +2,8 @@ const router = require("express").Router();
 const Category = require("../models/Category");
 const Post = require("../models/Post");
 const User = require("../models/User");
+const paginateResults = require("../public/js/pagination");
+
 
 //Create a category
 router.post("/", async (req, res) => {
@@ -29,10 +31,21 @@ router.get("/:name", async (req, res) => {
   try {
 
     const category = await Category.findOne({ name: req.params.name });
-    const limitNumber = 20;
     const nonPrivateUsers = await User.find({ isPrivate: false});
-    const posts = await Post.find({ author: {$in: nonPrivateUsers}, category: req.params.name }).sort({ _id: -1 }).limit(limitNumber);
-    res.render("categories", { category, posts });
+    const posts = await Post.find({ author: {$in: nonPrivateUsers}, category: req.params.name }).sort({ _id: -1 });
+
+    await paginateResults(req, res, posts, {});
+
+    const paginatedResults = res.paginatedResults;
+
+    res.render("categories", {
+      category,
+      posts: paginatedResults.results,
+      previousPage: paginatedResults.previous ? paginatedResults.previous.page : null,
+      nextPage: paginatedResults.next ? paginatedResults.next.page : null,
+      currentPage: req.query.page || 1,
+      totalPages: Math.ceil(posts.length / 20)
+    });
 
 
   } catch (err) {
@@ -46,11 +59,24 @@ router.get("/", async (req, res) => {
 
   try {
 
-    const limitNumber = 20;
-    const categories = await Category.find({}).limit(limitNumber);
-    res.render("categories_all", { title: "Render - Categories", categories } );
+    const categories = await Category.find({});
+
+    await paginateResults(req, res, categories, {});
+
+    const paginatedResults = res.paginatedResults;
+
+
+    res.render("categories_all", {
+      title: "Render - Categories",
+      categories: paginatedResults.results,
+      previousPage: paginatedResults.previous ? paginatedResults.previous.page : null,
+      nextPage: paginatedResults.next ? paginatedResults.next.page : null,
+      currentPage: req.query.page || 1,
+      totalPages: Math.ceil(categories.length / 20)
+    });
 
   } catch (err) {
+    console.log(err);
     res.status(500).json(err)
   }
 

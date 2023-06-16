@@ -1,26 +1,42 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-lg-8 mx-auto mb-5">
+      <h1>Follower Requests</h1>
 
-<div>
+      <div class="row py-4" id="posts-container">
 
-  <% requestedUsers.forEach(function(user){ %>
-    <div class="">
+        <% if(paginatedResults.length != "") { %>
+        <% paginatedResults.results.forEach(function(user){ %>
+        <div class="profile-post col-10 mx-auto">
 
-    <h1> <%= user.username %> </h1>
-    <p> <%= user.desc %> </p>
+          <h1> <%= user.username %> </h1>
+          <p> <%= user.desc %> </p>
 
-    <form class="" action="/users/<%= currentUser.id %>/requests/accept" method="post">
-      <input type="hidden" name="requesterId" value="<%= user.id %>">
-      <button type="submit" name="button">Accept</button>
-    </form>
+          <form class="" action="/users/<%= currentUser.id %>/requests/accept" method="post">
+            <input type="hidden" name="requesterId" value="<%= user.id %>">
+            <button type="submit" name="button">Accept</button>
+          </form>
 
-    <form class="" action="/users/<%= currentUser.id %>/requests/decline" method="post">
-      <input type="hidden" name="requesterId" value="<%= user.id %>">
-      <button type="submit" name="button">Decline</button>
-    </form>
+          <form class="" action="/users/<%= currentUser.id %>/requests/decline" method="post">
+            <input type="hidden" name="requesterId" value="<%= user.id %>">
+            <button type="submit" name="button">Decline</button>
+          </form>
+
+        </div>
+
+
+        <%  });} %>
+
+
+      </div>
+      <p class="no-more-posts d-none text-center py-5">No Posts Found!</p>
 
     </div>
 
-
-<%  }); %>
-
+  </div>
+  <input type="hidden" id="currentPage" value="<%= currentPage %>">
+  <div class="load-more-posts"></div>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="/js/infinite-pagination.js"></script>
 
 </div>

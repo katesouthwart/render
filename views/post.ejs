@@ -17,16 +17,42 @@
     </div>
 
     <div class="col-12 col-lg-5 col-xl-8 pb-3">
-      <div class="row">
-        <div class="col-12">
-          <h1><%= post.title %></h1>
-        </div>
-        <a href="/categories/<%= post.category %>"><i class="fas fa-tag me-2 mb-3"></i><%= post.category %></a>
-        <a href="/users/<%= author._id %>"><i class="fa-solid fa-user me-2 mb-3"></i><%= author.username %></a>
+      <div class="row h-100">
 
         <div class="col-12">
-          <%= post.desc %>
+          <div class="col-12">
+            <h1><%= post.title %></h1>
+          </div>
+
+          <div class="row">
+            <a href="/users/<%= author._id %>" class="col-4"><i class="fa-solid fa-user me-2 mb-3"></i><%= author.username %></a>
+            <a href="/categories/<%= post.category %>" class="col-4"><i class="fas fa-tag me-2 mb-3"></i><%= post.category %></a>
+          </div>
+
+          <div class="col-12 pb-3">
+            <%= post.desc %>
+          </div>
         </div>
+
+
+
+
+
+          <div class="row align-items-end pb-1">
+            <div class="">
+              <div class="col-12">
+                <p class="mb-0">Prep Time: <%= post.prepHours %>:<%= post.prepMins %></p>
+              </div>
+              <div class="col-12">
+                <p class="mb-0">Cook Time: <%= post.cookHours %>:<%= post.cookMins %></p>
+              </div>
+            </div>
+
+          </div>
+
+
+
+
       </div>
 
     </div>
