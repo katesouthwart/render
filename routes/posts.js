@@ -5,11 +5,11 @@ const User = require("../models/User");
 //Create a post
 router.get("/create", async (req, res) => {
   const infoErrorsObj = req.flash("infoErrors");
-  const infoSubmitObj = req.flash("infoSubmit");
+  // const infoSubmitObj = req.flash("infoSubmit");
   res.render("post_create", {
     title: "Render - Create a Recipe",
     infoErrorsObj,
-    infoSubmitObj
+    // infoSubmitObj
   });
 });
 
@@ -100,18 +100,20 @@ router.post("/:id/edit", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
-    if (post.author.toString() === req.user.id) {
-      await post.updateOne({
-        $set: req.body
-      });
+    if (post.author.toString() === req.user.id || req.user.isAdmin) {
+      await post.updateOne({ $set: req.body });
       res.status(200).json("Post successfully updated.");
     } else {
-      res.status(403).json("You can only edit your own posts.")
+      res.status(403).json("You can only edit your own posts.");
     }
   } catch (err) {
     res.status(500).json(err);
   }
 
+});
+
+router.get("/:id/edit", async (req, res) => {
+  res.render("edit_post");
 });
 
 //Delete a post
@@ -120,20 +122,14 @@ router.delete("/:id/delete", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
-    if (post.author.toString() === req.user.id) {
+    if (post.author.toString() === req.user.id || req.user.isAdmin) {
       await post.deleteOne();
 
       try {
-        const otherPosts = await Post.find({
-          author: req.user.id
-        });
+        const otherPosts = await Post.find({ author: req.user.id });
         if (!otherPosts || otherPosts.length === 0) {
           try {
-            await User.findByIdAndUpdate(req.user.id, {
-              $set: {
-                isAuthor: false
-              }
-            });
+            await User.findByIdAndUpdate(req.user.id, { $set: { isAuthor: false } });
           } catch (err) {
             res.status(500).json(err);
           }
@@ -169,6 +165,7 @@ router.put("/:id/like", async (req, res) => {
       }
 
     } else {
+      //In future, prompt on page login pop-up
       res.redirect("/auth/login");
     }
 
@@ -245,7 +242,8 @@ router.get("/:id", async (req, res) => {
       res.render("post", {
         title: "Render - Recipe",
         post,
-        author
+        author,
+        currentUser
       });
     } else {
         res.render("protected", {
@@ -270,9 +268,7 @@ router.get("/timeline/all", async (req, res) => {
     const currentUserPosts = await Post.find({ author: currentUser.id });
     const friendPosts = await Promise.all(
       currentUser.following.map((friendId) => {
-        return Post.find({
-          author: friendId
-        });
+        return Post.find({ author: friendId });
       })
     );
 

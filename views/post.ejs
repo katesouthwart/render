@@ -16,39 +16,105 @@
       <img src="/uploads/<%= post.img %>" alt="<%= post.title %>" class="img-fluid sticky-top post-img" loading="lazy">
     </div>
 
-    <div class="col-12 col-lg-5 col-xl-8 pb-3">
+    <div class="col-12 col-lg-7 col-xl-8 pb-3">
       <div class="row h-100">
 
-        <div class="col-12">
-          <div class="col-12">
-            <h1><%= post.title %></h1>
-          </div>
+        <div class="col-12 col-xl-10">
+          <div class="d-flex col-12 pb-3">
+            <h2 class="col-11"><%= post.title %></h2>
 
-          <div class="row">
-            <a href="/users/<%= author._id %>" class="col-4"><i class="fa-solid fa-user me-2 mb-3"></i><%= author.username %></a>
-            <a href="/categories/<%= post.category %>" class="col-4"><i class="fas fa-tag me-2 mb-3"></i><%= post.category %></a>
+            <% if (currentUser && currentUser.id === post.author.id.toString()) {%>
+              <div class="dropdown ms-auto col-1 text-end">
+                <button class="btn post-edit-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="/posts/<%= post.id %>/edit">Edit</a></li>
+                  <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#post-delete-modal-<%= post.id %>">Delete</a></li>
+                </ul>
+                    <div class="modal fade" id="post-delete-modal-<%= post.id %>" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered modal-sm">
+                        <div class="modal-content">
+
+                          <div class="modal-header justify-content-center">
+                            <h5 class="modal-title fw-bold" id="modal-title">Delete Recipe?</h5>
+                          </div>
+
+                          <div class="modal-body">
+                            <p class="text-secondary text-center">This cannot be undone. The recipe will be removed from your profile, the timeline, any accounts which follow you, and from search results.</p>
+                          </div>
+
+                          <div class="modal-footer justify-content-center">
+                            <button class="btn btn-danger" type="button" onclick="deletePost('<%= post.id %>')">Delete</button>
+                            <button class="btn btn-outline-dark" type="button" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+
+              </div>
+
+            <%}%>
+
+
+
+
+
           </div>
 
           <div class="col-12 pb-3">
+            <a href="/users/<%= author._id %>" class="col-4 text-dark"><i class="fa-solid fa-user me-2 mb-3 profile-icon-color"></i><%= author.username %></a>
+          </div>
+
+          <div class="col-12 pb-2 d-flex justify-content-between">
+            <div class="d-flex">
+              <p class="form-label me-2"><i class="fas fa-utensils profile-icon-color me-2"></i>Servings</p>
+              <p><%= post.servings %></p>
+            </div>
+            <div class="d-flex jusitfy-content-end">
+              <a href="/categories/<%= post.category %>" class="form-label"><i class="fas fa-tag me-2 mb-3 profile-icon-color"></i><%= post.category %></a>
+            </div>
+          </div>
+
+          <div class="col-12 pb-4">
             <%= post.desc %>
+          </div>
+
+          <div class="d-flex col-12 pb-1 d-flex justify-content-between pb-5">
+            <div class="d-flex col-4 col-xl-3 px-0 justify-content-start">
+              <p class="form-label me-2"><i class="fas fa-spoon profile-icon-color me-2"></i>Prep</p>
+              <p class=""><%= post.prepHours %>:<%= post.prepMins %></p>
+            </div>
+            <div class="d-flex col-4 col-xl-3 px-0 justify-content-center">
+              <p class="form-label me-2"><i class="fas fa-fire profile-icon-color me-2"></i>Cook</p>
+              <p><%= post.cookHours %>:<%= post.cookMins %></p>
+            </div>
+            <div class="d-flex col-4 col-xl-3 px-0 justify-content-end">
+              <p class="form-label me-2"><i class="fas fa-clock profile-icon-color me-2"></i>Total</p>
+              <p><%= post.displayHours %>:<%= post.displayMins %></p>
+
+            </div>
           </div>
         </div>
 
-
-
-
-
-          <div class="row align-items-end pb-1">
-            <div class="">
-              <div class="col-12">
-                <p class="mb-0">Prep Time: <%= post.prepHours %>:<%= post.prepMins %></p>
-              </div>
-              <div class="col-12">
-                <p class="mb-0">Cook Time: <%= post.cookHours %>:<%= post.cookMins %></p>
-              </div>
-            </div>
-
+        <div class="d-flex col-12 col-xl-10 pb-1 align-items-end justify-content-end float-end">
+          <div class="d-flex col-3 justify-content-end">
+            <a href="/posts/<%= post.id %>/like" class="profile-link"><i class="fa-regular fa-heart profile-icon-color me-2"></i><%= post.likes.length %></a>
           </div>
+          <div class="d-flex col-3 justify-content-end">
+            <a href="/posts/<%= post.id %>/save" class="profile-link"><i class="fa-regular fa-bookmark profile-icon-color me-2"></i><%= post.saves.length %></a>
+          </div>
+          <div class="d-flex col-6 justify-content-end">
+            <a href="/posts/<%= post.id %>/rate" class="profile-link">
+              <i class="far fa-star profile-icon-color me-2"></i>
+              <i class="far fa-star profile-icon-color me-2"></i>
+              <i class="far fa-star profile-icon-color me-2"></i>
+              <i class="far fa-star profile-icon-color me-2"></i>
+              <i class="far fa-star profile-icon-color me-2"></i>
+             <%= post.reviews.length %></a>
+          </div>
+        </div>
 
 
 
@@ -61,7 +127,7 @@
     <div class="row pt-4 align-items-start">
 
       <div class="row col-12 col-lg-4 pb-5">
-        <h4>Ingredients</h4>
+        <h4 class="form-label">Ingredients</h4>
         <ul class="list-group list-group-flush">
 
           <% post.ingredients.forEach(function(ingredient, index){ %>
@@ -73,7 +139,7 @@
 
 
       <div class="row col-12 col-lg-8 ms-lg-4 pb-5">
-        <h4>Directions</h4>
+        <h4 class="form-label">Directions</h4>
         <ul class="list-group list-group-flush">
 
           <% post.instructions.forEach(function(step, index){ %>

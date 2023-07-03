@@ -12,6 +12,7 @@ const authRoute = require("./routes/auth");
 const postsRoute = require("./routes/posts");
 const exploreRoute = require("./routes/explore");
 const categoryRoute = require("./routes/categories");
+const commentsRoute = require("./routes/comments");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
@@ -41,13 +42,9 @@ app.use(express.urlencoded({extended: true}));
 app.use(helmet());
 app.use(morgan("common"));
 
-//contradicts our previously set app.use for sessions, look into this and why? Fore flash messages and file uploader supposedly
+
 app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
-// app.use(session({
-//   secret: "CookingBlogSecretSession",
-//   saveUninitialized: true,
-//   resave: true
-// }));
+
 app.use(flash());
 app.use(fileUpload());
 
@@ -122,6 +119,7 @@ app.use("/auth", authRoute);
 app.use("/posts", postsRoute);
 app.use("/categories", categoryRoute);
 app.use("/explore", exploreRoute);
+app.use("/comments", commentsRoute);
 
 app.get("/", (req, res) => {
 

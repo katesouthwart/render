@@ -11,7 +11,7 @@ const postSchema = new mongoose.Schema({
   desc: {
     type: String,
     required: true,
-    max: 500
+    max: 200
   },
   img: {
     type: String,
@@ -27,18 +27,28 @@ const postSchema = new mongoose.Schema({
     default: [],
     required: true
   },
-  likes: {
-    type: Array,
-    default: []
-  },
-  saves: {
-    type: Array,
-    default: []
-  },
+  likes: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectID,
+      ref: "User"},
+    likedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  saves: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectID,
+      ref: "User"},
+    savedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   reviews: [
     {
       user: {
-        type: mongoose.Schema.Types.ObjectID, 
+        type: mongoose.Schema.Types.ObjectID,
         ref: "User"
       },
       rating: {

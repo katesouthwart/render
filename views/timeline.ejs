@@ -29,8 +29,32 @@
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="/posts/<%= post.id %>/edit">Edit</a></li>
-                    <li><a class="dropdown-item" href="/posts/<%= post.id %>/delete">Delete</a></li>
-                  </ul>
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#post-delete-modal-<%= post.id %>">Delete</a></li>
+  </ul>
+                      <div class="modal fade" id="post-delete-modal-<%= post.id %>" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-sm">
+                          <div class="modal-content">
+
+                            <div class="modal-header justify-content-center">
+                              <h5 class="modal-title fw-bold" id="modal-title">Delete Recipe?</h5>
+                            </div>
+
+                            <div class="modal-body">
+                              <p class="text-secondary text-center">This cannot be undone. The recipe will be removed from your profile, the timeline, any accounts which follow you, and from search results.</p>
+                            </div>
+
+                            <div class="modal-footer justify-content-center">
+                              <button class="btn btn-danger" type="button" onclick="deletePost('<%= post.id %>')">Delete</button>
+                              <button class="btn btn-outline-dark" type="button" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+
+
+
                 </div>
               </div>
 
@@ -46,7 +70,7 @@
                   <a href="/posts/<%= post.id %>/like" class="profile-link"><i class="fa-regular fa-heart profile-icon-color me-2"></i><%= post.likes.length %></a>
                 </div>
                 <div class="row col-2">
-                  <a href="/posts/<%= post.id %>/save" class="profile-link"><i class="fa-regular fa-bookmark profile-icon-color me-2"></i></a>
+                  <a href="/posts/<%= post.id %>/save" class="profile-link"><i class="fa-regular fa-bookmark profile-icon-color me-2"></i><%= post.saves.length %></a>
                 </div>
               </div>
             </div>
@@ -77,7 +101,7 @@
                   <a href="/posts/<%= post.id %>/like" class="profile-link"><i class="fa-regular fa-heart profile-icon-color me-2"></i><%= post.likes.length %></a>
                 </div>
                 <div class="row col-2">
-                  <a href="/posts/<%= post.id %>/save" class="profile-link"><i class="fa-regular fa-bookmark profile-icon-color me-2"></i></a>
+                  <a href="/posts/<%= post.id %>/save" class="profile-link"><i class="fa-regular fa-bookmark profile-icon-color me-2"></i><%= post.saves.length %></a>
                 </div>
               </div>
             </div>
@@ -88,7 +112,7 @@
         <% }) %>
 
         <% } %>
-  
+
 
       </div>
       <p class="no-more-posts d-none text-center py-5">No Posts Found!</p>

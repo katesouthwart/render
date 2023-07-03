@@ -47,10 +47,24 @@ p {
   outline: none;
 }
 
+/* Modals */
+.modal-header {
+  border: none !important;
+}
+
+.modal-footer {
+  border: none !important;
+}
+
 /* Headings */
 .big-heading {
   font-size: 3.5rem;
   color: white;
+}
+
+/* breadcrumbs */
+.breadcrumb-item > a {
+  color: #A75D5D;
 }
 
 /* Title Section */

@@ -274,6 +274,115 @@ router.post("/:id/requests/decline", async (req, res) => {
 
 });
 
+//view user liked posts
+router.get("/:id/likes", async (req, res) => {
+
+  const currentUser = req.user;
+
+  if (currentUser && currentUser.id === req.params.id) {
+    const followedUsers = await User.find({ followers: currentUser.id })
+
+    try {
+
+      const publicLikedPosts = await Post.find({ "likes.user": currentUser.id, "author.isPrivate": false }).populate("author");
+      const viewablePrivateLikedPosts = await Post.find({ "likes.user": currentUser.id, "author.isPrivate": true, author: { $in: followedUsers } }).populate("author");
+
+      let allPosts = [...publicLikedPosts, ...viewablePrivateLikedPosts.flat()];
+      // allPosts = allPosts.sort((a, b) => b.createdAt - a.createdAt);
+      allPosts.sort((a, b) => {
+        const lastLikedA = a.likes.find((like) => like.user.toString() === currentUser.id.toString());
+        const lastLikedB = b.likes.find((like) => like.user.toString() === currentUser.id.toString());
+
+        if (lastLikedA && lastLikedB) {
+          return lastLikedB.likedAt - lastLikedA.likedAt;
+        } else if (lastLikedA) {
+          return -1;
+        } else if (lastLikedB) {
+          return 1;
+        }
+
+        return b.createdAt - a.createdAt; // Fallback to sorting by creation time if no likes from the current user
+      });
+
+      // Pagination
+      const currentPage = parseInt(req.query.page) || 1;
+      const pageSize = 10;
+
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = currentPage * pageSize;
+      const paginatedResults = {};
+      paginatedResults.results = allPosts.slice(startIndex, endIndex);
+
+      res.render("timeline", {
+        title: "Render - Likes",
+        paginatedResults,
+        currentPage,
+        currentUser
+      });
+    } catch (err) {
+      res.status(500).json(err);
+    }
+
+  } else {
+    res.status(403).json("You can only view your own liked posts.");
+  }
+
+});
+
+//view user saved posts
+router.get("/:id/saved", async (req, res) => {
+
+  const currentUser = req.user;
+
+  if (currentUser && currentUser.id === req.params.id) {
+    const followedUsers = await User.find({ followers: currentUser.id })
+
+    try {
+
+      const publicSavedPosts = await Post.find({ "saves.user": currentUser.id, "author.isPrivate": false }).populate("author");
+      const viewablePrivateSavedPosts = await Post.find({ "saves.user": currentUser.id, "author.isPrivate": true, author: { $in: followedUsers } }).populate("author");
+
+      let allPosts = [...publicSavedPosts, ...viewablePrivateSavedPosts.flat()];
+      // allPosts = allPosts.sort((a, b) => b.createdAt - a.createdAt);
+      allPosts.sort((a, b) => {
+        const lastSavedA = a.saves.find((save) => save.user.toString() === currentUser.id.toString());
+        const lastSavedB = b.saves.find((save) => save.user.toString() === currentUser.id.toString());
+
+        if (lastSavedA && lastSavedB) {
+          return lastSavedB.savedAt - lastSavedA.savedAt;
+        } else if (lastSavedA) {
+          return -1;
+        } else if (lastSavedB) {
+          return 1;
+        }
+
+        return b.createdAt - a.createdAt; // Fallback to sorting by creation time if no likes from the current user
+      });
+
+      // Pagination
+      const currentPage = parseInt(req.query.page) || 1;
+      const pageSize = 10;
+
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = currentPage * pageSize;
+      const paginatedResults = {};
+      paginatedResults.results = allPosts.slice(startIndex, endIndex);
+
+      res.render("timeline", {
+        title: "Render - Saved Recipes",
+        paginatedResults,
+        currentPage,
+        currentUser
+      });
+    } catch (err) {
+      res.status(500).json(err);
+    }
+
+  } else {
+    res.status(403).json("You can only view your own liked posts.");
+  }
+
+});
 
 
 module.exports = router

@@ -24,7 +24,7 @@
             <a class="nav-link navbar-custom px-3 " href="/notifications"><i class="fa-solid fa-bell fa-1x"></i></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link navbar-custom px-3 " href="users/<%= user.id %>/saved"><i class="fa-solid fa-bookmark fa-1x"></i></a>
+            <a class="nav-link navbar-custom px-3 " href="/users/<%= user.id %>/saved"><i class="fa-solid fa-bookmark fa-1x"></i></a>
           </li>
           <li class="nav-item dropdown ">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -38,7 +38,7 @@
               <li><a class="dropdown-item" href="/users/<%= user.id %>/requests">Requests</a></li>
             <% } %>
 
-
+              <li><a class="dropdown-item" href="/users/<%= user.id %>/likes">Likes</a></li>
               <li><a class="dropdown-item" href="/users/<%= user.id %>/settings">Settings</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="/auth/logout">Log out</a></li>
