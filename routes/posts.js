@@ -1,15 +1,17 @@
 const router = require("express").Router();
 const Post = require("../models/Post");
 const User = require("../models/User");
+const Comment = require("../models/Comment");
+const { formatTimestamp } = require('../public/js/helpers');
 
 //Create a post
 router.get("/create", async (req, res) => {
   const infoErrorsObj = req.flash("infoErrors");
-  // const infoSubmitObj = req.flash("infoSubmit");
+  const infoSubmitObj = req.flash("infoSubmit");
   res.render("post_create", {
     title: "Render - Create a Recipe",
     infoErrorsObj,
-    // infoSubmitObj
+    infoSubmitObj
   });
 });
 
@@ -149,68 +151,96 @@ router.delete("/:id/delete", async (req, res) => {
 
 });
 
-//Like / un-like a post
 router.put("/:id/like", async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const postId = req.params.id;
+    const post = await Post.findById(postId);
 
     if (req.user) {
+      const userId = req.user.id;
 
-      if (!post.likes.includes(req.user.id)) {
-        await post.updateOne({ $push: { likes: req.user.id } });
-        res.status(200).json("The post has been liked.");
+      const alreadyLiked = post.likes.some((like) => like.user.equals(userId));
+
+      if (!alreadyLiked) {
+
+        const likeObject = {
+          user: userId,
+          likedAt: new Date(),
+        };
+
+        post.likes.push(likeObject);
+        await post.save();
+
+        res.status(200).json({ message: "The post has been liked.", likes: post.likes.length, alreadyLiked: true });
       } else {
-        await post.updateOne({ $pull: { likes: req.user.id } });
-        res.status(200).json("The post has been un-liked.");
-      }
 
+        post.likes = post.likes.filter((like) => !like.user.equals(userId));
+        await post.save();
+
+
+        res.status(200).json({ message: "The post has been un-liked.", likes: post.likes.length, alreadyLiked: false });
+      }
     } else {
-      //In future, prompt on page login pop-up
+
       res.redirect("/auth/login");
     }
-
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
 
 //Save / un-save a posts
 router.put("/:id/save", async (req, res) => {
-  //test functionality once frontend
   try {
-    const post = await Post.findById(req.params.id);
+    const postId = req.params.id;
+    const post = await Post.findById(postId);
 
     if (req.user) {
+      const userId = req.user.id;
 
-      if (!post.saves.includes(req.user.id)) {
-        await post.updateOne({ $push: { saves: req.user.id } });
-        res.status(200).json("The post has been saved.");
+      const alreadySaved = post.saves.some((save) => save.user.equals(userId));
+
+      if (!alreadySaved) {
+
+        const saveObject = {
+          user: userId,
+          savedAt: new Date(),
+        };
+
+        post.saves.push(saveObject);
+        await post.save();
+
+        res.status(200).json({ message: "The post has been saved.", saves: post.saves.length, alreadySaved: true });
       } else {
-        await post.updateOne({ $pull: { saves: req.user.id } });
-        res.status(200).json("The post has been un-saved");
-      }
 
+        post.saves = post.saves.filter((save) => !save.user.equals(userId));
+        await post.save();
+
+
+        res.status(200).json({ message: "The post has been un-saved.", saves: post.saves.length, alreadySaved: false });
+      }
     } else {
+
       res.redirect("/auth/login");
     }
-
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
-})
+});
 
 //Submit rating for a post
 router.post("/:id/rate", async (req, res) => {
-  //test functionality once frontend
   try {
     const postId = req.params.id;
     const currentUserId = req.user.id;
     const rating = req.body.rating;
 
-    const post = await Post.findOne({ _id: postId, 'reviews.user': userId});
+    const post = await Post.findOne({ _id: postId, 'reviews.user': currentUserId});
     if (post) {
       await Post.updateOne(
-        { _id: postId, 'reviews.user': userId },
+        { _id: postId, 'reviews.user': currentUserId },
         { $set : { 'reviews.$.rating': rating } }
       );
     } else {
@@ -230,12 +260,53 @@ router.post("/:id/rate", async (req, res) => {
 router.get("/:id", async (req, res) => {
 
   try {
-    const post = await Post.findById(req.params.id).populate("author");
+    let post = await Post.findById(req.params.id).populate("author");
     const author = post.author;
     let currentUser = "";
+    const postId = req.params.id;
+    let comments = await Comment.find({ parentPost: postId }).populate("author");
+    let userReviewScores = {};
+
+    comments.forEach(function(comment, index){
+      userReviewScores[comment.author.id] = post.reviews.find((review) => review.user._id.toString() === comment.author.id);
+    });
+
+    let currentUserRating = 0;
+
+    const totalRatings = post.reviews.length;
+
+    let averageRating = 0;
+    let roundedAverageRating = 0;
+    let averageOneDecimal = 0;
+
+    if (totalRatings > 0) {
+      totalRatingSum = post.reviews.reduce((sum, review) => sum + review.rating, 0);
+      averageRating = totalRatingSum / totalRatings;
+      roundedAverageRating = Math.round(averageRating);
+      averageOneDecimal = averageRating.toFixed(1);
+    }
+
+
 
     if (req.user) {
       currentUser = await User.findById(req.user.id);
+      const currentUserReview = await Post.findOne({ _id: postId, 'reviews.user': currentUser._id });
+      if (currentUserReview) {
+        currentUserRating = currentUserReview.reviews.find(review => review.user.equals(currentUser._id)).rating;
+      }
+
+      post = post.toObject();
+
+      post.formattedCreatedAt = formatTimestamp(post.createdAt);
+
+      if (post.likes && Array.isArray(post.likes)) {
+        post.alreadyLiked = post.likes.some(like => like.user.toString() === currentUser.id);
+      }
+
+      if (post.saves && Array.isArray(post.saves)) {
+        post.alreadySaved = post.saves.some(save => save.user.toString() === currentUser.id);
+      }
+
     }
 
     if (!author.isPrivate || (req.user && req.user.id === author.id) || (author.followers.includes(currentUser.id)) ) {
@@ -243,7 +314,13 @@ router.get("/:id", async (req, res) => {
         title: "Render - Recipe",
         post,
         author,
-        currentUser
+        currentUser,
+        comments,
+        currentUserRating,
+        averageRating,
+        roundedAverageRating,
+        averageOneDecimal,
+        userReviewScores
       });
     } else {
         res.render("protected", {
@@ -259,22 +336,26 @@ router.get("/:id", async (req, res) => {
 });
 
 //Get all following / timeline postSchema
-
 router.get("/timeline/all", async (req, res) => {
-  //test functionality once frontend done
 
   try {
     const currentUser = await User.findById(req.user.id);
-    const currentUserPosts = await Post.find({ author: currentUser.id });
+    const currentUserPosts = await Post.find({ author: currentUser.id }).populate("author");
     const friendPosts = await Promise.all(
       currentUser.following.map((friendId) => {
-        return Post.find({ author: friendId });
+        return Post.find({ author: friendId }).populate("author");
       })
     );
 
     let allPosts = [...currentUserPosts, ...friendPosts.flat()];
     allPosts = allPosts.sort((a, b) => b.createdAt - a.createdAt);
 
+    for (const post of allPosts) {
+      let comments = await Comment.find({ parentPost: post.id });
+      post.commentCount = comments.length;
+
+      post.formattedCreatedAt = formatTimestamp(post.createdAt);
+    }
 
     // Pagination
     const currentPage = parseInt(req.query.page) || 1;
@@ -285,11 +366,34 @@ router.get("/timeline/all", async (req, res) => {
     const paginatedResults = {};
     paginatedResults.results = allPosts.slice(startIndex, endIndex);
 
+    // Find all posts that include the user's ID in the likes array
+    const alreadyLikedPosts = await Post.find({ "likes.user": req.user.id });
+
+    const likedPostIds = alreadyLikedPosts.map(post => post._id.toString());
+    paginatedResults.results.forEach(post => {
+      post.alreadyLiked = likedPostIds.includes(post._id.toString());
+    });
+
+
+    const alreadyLiked = paginatedResults.results.map(post => post.alreadyLiked);
+
+    // Find all posts that include the user's ID in the saves array
+    const alreadySavedPosts = await Post.find({ "saves.user": req.user.id });
+
+    const savedPostIds = alreadySavedPosts.map(post => post._id.toString());
+    paginatedResults.results.forEach(post => {
+      post.alreadySaved = savedPostIds.includes(post._id.toString());
+    });
+
+    const alreadySaved = paginatedResults.results.map(post => post.alreadySaved);
+
     res.render("timeline", {
       title: "Render - Timeline",
       paginatedResults,
       currentPage,
-      currentUser
+      currentUser,
+      alreadyLiked,
+      alreadySaved
     });
   } catch (err) {
     console.log(err);

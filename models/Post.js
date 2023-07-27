@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    max: 100
+    max: 40
   },
   desc: {
     type: String,

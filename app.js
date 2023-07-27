@@ -24,7 +24,6 @@ const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
 
-
 dotenv.config();
 app.use(express.static("public"));
 app.set("view engine", "ejs");
@@ -111,7 +110,6 @@ app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated();
   next();
 });
-
 
 //Routes
 app.use("/users", usersRoute);

@@ -3,6 +3,8 @@ const router = require("express").Router();
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const Post = require("../models/Post");
+const Comment = require("../models/Comment");
+const { formatTimestamp } = require('../public/js/helpers');
 
 //update user
 router.get("/:id/settings", (req, res) =>{
@@ -70,6 +72,13 @@ router.get("/:id", async (req, res) => {
     const limitNumber = 20;
     const posts = await Post.find({ author: req.params.id}).sort({ _id: -1}).limit(limitNumber);
 
+    for (const post of posts) {
+      let comments = await Comment.find({ parentPost: post.id });
+      post.commentCount = comments.length;
+
+      post.formattedCreatedAt = formatTimestamp(post.createdAt);
+    }
+
 
     // Pagination
     const currentPage = parseInt(req.query.page) || 1;
@@ -80,19 +89,43 @@ router.get("/:id", async (req, res) => {
     const paginatedResults = {};
     paginatedResults.results = posts.slice(startIndex, endIndex);
 
+    // Find all posts that include the user's ID in the likes array
+    const alreadyLikedPosts = await Post.find({ "likes.user": req.user.id });
+
+    const likedPostIds = alreadyLikedPosts.map(post => post._id.toString());
+    paginatedResults.results.forEach(post => {
+      post.alreadyLiked = likedPostIds.includes(post._id.toString());
+    });
+
+    const alreadyLiked = paginatedResults.results.map(post => post.alreadyLiked);
+
+    // Find all posts that include the user's ID in the saves array
+    const alreadySavedPosts = await Post.find({ "saves.user": req.user.id });
+
+    const savedPostIds = alreadySavedPosts.map(post => post._id.toString());
+    paginatedResults.results.forEach(post => {
+      post.alreadySaved = savedPostIds.includes(post._id.toString());
+    });
+
+    const alreadySaved = paginatedResults.results.map(post => post.alreadySaved);
+
     if (currentUser && currentUser.id === viewedUser.id) {
       res.render("profile", {
         title: viewedUser.username,
         profile: other,
         paginatedResults,
-        currentPage
+        currentPage,
+        alreadyLiked,
+        alreadySaved
       });
     } else if (!viewedUser.isPrivate || viewedUser.followers.includes(currentUser.id)) {
       res.render("user", {
         title: viewedUser.username,
         viewedUser: other,
         paginatedResults,
-        currentPage
+        currentPage,
+        alreadyLiked,
+        alreadySaved
       });
     } else {
       res.render("protected", {viewedUser: other});

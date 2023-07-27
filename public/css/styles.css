@@ -12,6 +12,7 @@ p {
   color: black;
 }
 
+
 .heading-white-bg {
   color: #A75D5D;
 }
@@ -177,6 +178,57 @@ p {
   border-radius: 8px;
 }
 
+.comment-profile-pic {
+  height: 55px;
+  width: 55px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.rating > input {
+  display: none;
+}
+
+.rating > label {
+  width: 1.1em;
+  color: #D3756B;
+  cursor: pointer;
+}
+
+.rating > label::before{
+  content: "\2605";
+  position: absolute;
+  opacity: 0;
+}
+
+.rating > label:hover:before,
+.rating > label:hover ~ label:before {
+  opacity: 1 !important;
+}
+
+.rating > input:checked ~ label:before {
+  opacity:1;
+}
+
+.rating:hover > input:checked ~ label:before {
+  opacity: 0.4;
+}
+
+.timestamp-text {
+  font-size: 12px;
+}
+
+.like-button {
+  border: none;
+  background-color: transparent;
+}
+
+.save-button {
+  border: none;
+  background-color: transparent;
+}
+
+/* POST CREATE */
 .btn-circle {
   width: 40px;
   height: 40px;
@@ -228,7 +280,8 @@ p {
   border-color: #FFC3A1;
 }
 
-/* user */
+
+/* USER */
 .profile-picture {
   height: 175px;
   width: 175px;
@@ -312,4 +365,19 @@ p {
 
 .post-times {
   height: 100px;
+}
+
+/* Timeline */
+.timeline-post-img img {
+  height: 150px;
+  width: 100%;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+@media screen and (max-width: 767px) {
+  .timeline-post-img img {
+    height: 400px;
+  }
 }

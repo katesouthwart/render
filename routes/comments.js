@@ -17,7 +17,7 @@ router.post("/create", async (req, res) => {
 
       const savedComment = await newComment.save();
 
-      res.status(200).json("Comment successfully added.")
+      res.redirect("/posts/" + req.body.parentPostId + "#comments");
     } else {
       //In future, prompt on page login pop-up
       res.redirect("/auth/login");
@@ -53,8 +53,9 @@ router.delete("/:id/delete", async (req, res) => {
 
     if (comment.author.toString() === req.user.id || req.user.isAdmin) {
       await comment.deleteOne();
+      res.status(200).json("Comment successfully deleted.");
     } else {
-      res.status(403).json("You can only delete your own comments.")
+      res.status(403).json("You can only delete your own comments.");
     }
   } catch (err) {
     res.status(500).json(err);
