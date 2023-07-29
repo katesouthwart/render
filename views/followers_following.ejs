@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-lg-8 mx-auto mb-5">
+
+      <h2 class="heading-white-bg py-3"><%= pageHeading  %></h2>
+
+      <div class="row py-4" id="users-container">
+
+        <% if(paginatedResults.length != "") { %>
+        <% paginatedResults.results.forEach(function(user){ %>
+
+          <div class="col-12 d-flex user-container flex-wrap border-top border-subtle pt-3 mb-3">
+
+            <div class="col-1">
+              <a href="/users/<%= user.id %>" class="form-label me-3">
+                <img class="directory-profile-pic" src="/uploads/<%= user.profilePicture %>" onerror="this.onerror=null; this.src='/uploads/flame.PNG';" alt="">
+              </a>
+            </div>
+
+            <div class="col-11 ps-3 d-flex justify-content-between flex-wrap">
+              <a href="/users/<%= user.id %>" class="form-label profile-followers"><h5><%= user.username %></h5></a>
+
+              <div class="col-2 d-flex justify-content-end">
+                <form class="" action="/users/<%= user._id %>/follow" method="post">
+                  <button class="btn btn-outline-primary form-add-btn" type="submit" name="">Follow</button>
+                </form>
+              </div>
+
+              <p class="text-break col-12 pt-2"> <%= user.desc %> </p>
+            </div>
+
+          </div>
+
+        <%  }); %>
+        <% } else { %>
+        <p class="no-more-posts d-none text-center py-5">Nothing to see here.</p>
+        <% } %>
+
+      </div>
+
+    </div>
+
+  </div>
+  <input type="hidden" id="currentPage" value="<%= currentPage %>">
+  <div class="load-more-posts"></div>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="/js/infinite-pagination.js"></script>
+</div>

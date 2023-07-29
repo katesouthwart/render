@@ -15,7 +15,7 @@
 
     <a href="/posts/<%= recipe._id %>" class="col text-center category-link">
       <div class="explore-img latest-img">
-        <img src="/uploads/<%= recipe.img %>" alt="<%= recipe.title %>" loading="lazy">
+        <img src="/uploads/<%= recipe.img %>" onerror="this.onerror=null; this.src='/uploads/flame header.png';" alt="<%= recipe.title %>" loading="lazy">
       </div>
       <div class="pt-1"><%= recipe.title %></div>
     </a>

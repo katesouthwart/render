@@ -1,42 +1,57 @@
 <div class="container">
   <div class="row">
     <div class="col-12 col-lg-8 mx-auto mb-5">
-      <h1>Follower Requests</h1>
 
-      <div class="row py-4" id="posts-container">
+      <h2 class="heading-white-bg py-3">Follower Requests</h2>
+
+      <div class="row py-4" id="requests-container">
 
         <% if(paginatedResults.length != "") { %>
         <% paginatedResults.results.forEach(function(user){ %>
-        <div class="profile-post col-10 mx-auto">
 
-          <h1> <%= user.username %> </h1>
-          <p> <%= user.desc %> </p>
+          <div class="col-12 d-flex user-container flex-wrap border-top border-subtle pt-3 mb-3">
 
-          <form class="" action="/users/<%= currentUser.id %>/requests/accept" method="post">
-            <input type="hidden" name="requesterId" value="<%= user.id %>">
-            <button type="submit" name="button">Accept</button>
-          </form>
+            <div class="col-1">
+              <a href="/users/<%= user.id %>" class="form-label me-3">
+              <img class="directory-profile-pic" src="/uploads/<%= user.profilePicture %>" onerror="this.onerror=null; this.src='/uploads/flame.PNG';" alt="">
+              </a>
+            </div>
 
-          <form class="" action="/users/<%= currentUser.id %>/requests/decline" method="post">
-            <input type="hidden" name="requesterId" value="<%= user.id %>">
-            <button type="submit" name="button">Decline</button>
-          </form>
+            <div class="col-11 ps-3 d-flex justify-content-between flex-wrap">
+              <a href="/users/<%= user.id %>" class="form-label profile-followers"><h5><%= user.username %></h5></a>
 
-        </div>
+              <div class="d-flex justify-content-end">
+                <div class="me-3">
+                  <form class="" action="/users/<%= currentUserId %>/requests/accept" method="post">
+                    <input type="hidden" name="requesterId" value="<%= user.id %>">
+                    <button class="btn btn-outline-success" type="submit" name="">Accept</button>
+                  </form>
+                </div>
+                <div class="">
+                  <form class="" action="/users/<%= currentUserId %>/requests/decline" method="post">
+                    <input type="hidden" name="requesterId" value="<%= user.id %>">
+                    <button class="btn btn-outline-danger" type="submit" name="">Decline</button>
+                  </form>
+                </div>
+              </div>
 
+              <p class="text-break col-12 pt-2"> <%= user.desc %> </p>
+            </div>
 
-        <%  });} %>
+          </div>
 
+          </div>
+
+        <%  }); %>
+      <% } else { %>
+          <p class="no-more-posts d-none text-center py-5">No Requests Found!</p>
+        <% } %>
 
       </div>
-      <p class="no-more-posts d-none text-center py-5">No Posts Found!</p>
-
     </div>
-
   </div>
   <input type="hidden" id="currentPage" value="<%= currentPage %>">
   <div class="load-more-posts"></div>
   <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
   <script src="/js/infinite-pagination.js"></script>
-
 </div>

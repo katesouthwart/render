@@ -18,7 +18,7 @@
 
             <div class="col-12 col-md-2">
               <a href="/posts/<%= post.id %>" class="timeline-post-img">
-                <img src="/uploads/<%= post.img %>" alt="<%= post.title %>" loading="lazy">
+                <img src="/uploads/<%= post.img %>" onerror="this.onerror=null; this.src='/uploads/flame header.png';" alt="<%= post.title %>" loading="lazy">
               </a>
             </div>
 
@@ -116,7 +116,7 @@
 
               <div class="col-12 col-md-2">
                 <a href="/posts/<%= post.id %>" class="timeline-post-img">
-                  <img src="/uploads/<%= post.img %>" alt="<%= post.title %>" loading="lazy">
+                  <img src="/uploads/<%= post.img %>" onerror="this.onerror=null; this.src='/uploads/flame header.png';" alt="<%= post.title %>" loading="lazy">
                 </a>
               </div>
 

@@ -124,6 +124,10 @@ router.delete("/:id/delete", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
+    if (!post) {
+      return res.status(404).json("Post not found.");
+    }
+
     if (post.author.toString() === req.user.id || req.user.isAdmin) {
       await post.deleteOne();
 
@@ -151,6 +155,7 @@ router.delete("/:id/delete", async (req, res) => {
 
 });
 
+//Like / unlike a post
 router.put("/:id/like", async (req, res) => {
   try {
     const postId = req.params.id;
@@ -269,6 +274,8 @@ router.get("/:id", async (req, res) => {
 
     comments.forEach(function(comment, index){
       userReviewScores[comment.author.id] = post.reviews.find((review) => review.user._id.toString() === comment.author.id);
+
+      comment.formattedCreatedAt = formatTimestamp(comment.createdAt);
     });
 
     let currentUserRating = 0;

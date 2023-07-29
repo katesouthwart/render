@@ -4,9 +4,8 @@ const Post = require("../models/Post");
 const User = require("../models/User");
 const paginateResults = require("../public/js/pagination");
 
-
+//GET Explore
 router.get("/", async (req, res) => {
-
   try {
 
     const limitNumber = 5;
@@ -28,11 +27,10 @@ router.get("/", async (req, res) => {
   } catch (err) {
     res.status(500).json(err)
   }
-
 });
 
+//GET search
 router.get("/search", async (req, res) => {
-
   try{
     const searchTerm = req.query.searchTerm;
     const nonPrivateUsers = await User.find({ isPrivate: false});
@@ -53,13 +51,10 @@ router.get("/search", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-
 });
 
-
-
+//GET Latest Recipes
 router.get("/latest", async (req, res) => {
-
   try {
 
     const nonPrivateUsers = await User.find({ isPrivate: false});
@@ -80,11 +75,10 @@ router.get("/latest", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-
 });
 
+//GET Thirty Minutes or Less
 router.get("/ThirtyMinutesOrLess", async (req, res) => {
-
   try {
     const nonPrivateUsers = await User.find({ isPrivate: false});
     const posts = await Post.find({ author: { $in: nonPrivateUsers }, totalMins: { $lt: 31} }).sort({ _id: -1 });
@@ -104,11 +98,9 @@ router.get("/ThirtyMinutesOrLess", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-
 });
 
 router.get("/random", async (req, res) => {
-
   try {
 
     let publicUserCount = await User.find({ isPrivate: false, isAuthor: true }).countDocuments();
@@ -124,10 +116,6 @@ router.get("/random", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-
 });
-
-
-
 
 module.exports = router;

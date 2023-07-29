@@ -5,6 +5,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const { formatTimestamp } = require('../public/js/helpers');
+const { formatJoinedDate } = require('../public/js/helpers');
 
 //update user
 router.get("/:id/settings", (req, res) =>{
@@ -109,6 +110,8 @@ router.get("/:id", async (req, res) => {
 
     const alreadySaved = paginatedResults.results.map(post => post.alreadySaved);
 
+    other.formattedJoinedAt = formatJoinedDate(other.createdAt);
+
     if (currentUser && currentUser.id === viewedUser.id) {
       res.render("profile", {
         title: viewedUser.username,
@@ -133,6 +136,7 @@ router.get("/:id", async (req, res) => {
 
 
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 
@@ -154,8 +158,10 @@ router.post("/:id/follow", async (req, res) => {
           try {
             await viewedUser.updateOne({ $push: { followers: currentUser.id } });
             await currentUser.updateOne({ $push: { following: viewedUser.id } });
-            // res.status(200).
-            res.redirect("/users/" + req.params.id);
+
+            res.status(200).json({ message: "The user has been followed",
+            // alreadyfollowed: true
+          });
           } catch (err){
             res.status(500).json(err);
           }
@@ -165,7 +171,9 @@ router.post("/:id/follow", async (req, res) => {
           try {
             await viewedUser.updateOne({ $pull: { followers: currentUser.id } });
             await currentUser.updateOne({ $pull: { following: viewedUser.id } });
-            res.redirect("/users/" + req.params.id);
+            res.status(200).json({ message: "The user has been unfollowed",
+            // alreadyfollowed: true
+          });
           } catch (err){
             res.status(500).json(err);
           }
@@ -219,8 +227,9 @@ router.get("/:id/requests", async (req, res) => {
 
     try {
       if (req.user && req.user.id === req.params.id) {
-      const currentUser = req.user.id;
-      const foundUsers = await User.find({ requestedTo: req.params.id});
+      const currentUserId = req.user.id;
+      let foundUsers = []
+      foundUsers = await User.find({ requestedTo: req.params.id});
 
       // Pagination
       const currentPage = parseInt(req.query.page) || 1;
@@ -231,20 +240,13 @@ router.get("/:id/requests", async (req, res) => {
       const paginatedResults = {};
       paginatedResults.results = foundUsers.slice(startIndex, endIndex);
 
-
-      if (foundUsers.length > 0) {
         res.render("requests", {
           title: "Render - Follower Requests",
           requestedUsers: foundUsers,
           paginatedResults,
           currentPage,
-          currentUser
+          currentUserId
         });
-      } else {
-        res.render("requests", {
-          title: "Render - Follower Requests",
-        });
-      }
     } else {
       return res.status(403).json("You can only access requests for your own account!");
     }
@@ -412,10 +414,89 @@ router.get("/:id/saved", async (req, res) => {
     }
 
   } else {
-    res.status(403).json("You can only view your own liked posts.");
+    res.status(403).json("You can only view your own saved posts.");
   }
 
 });
 
+//View user following
+router.get("/:id/following", async (req, res) => {
+const currentUser = req.user;
+const viewedUser = await User.findById(req.params.id);
+const pageHeading = viewedUser.username + "'s Following";
+let accounts = [];
+
+if (currentUser && currentUser.id === viewedUser.id || !viewedUser.isPrivate || viewedUser.followers.includes(currentUser.id)) {
+
+  try {
+    accounts = await User.find({followers: viewedUser.id})
+
+    // Pagination
+    const currentPage = parseInt(req.query.page) || 1;
+    const pageSize = 10;
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = currentPage * pageSize;
+    const paginatedResults = {};
+    paginatedResults.results = accounts.slice(startIndex, endIndex);
+
+    res.render("followers_following", {
+      title: viewedUser.username + "'s' Following",
+      viewedUser,
+      accounts,
+      pageHeading,
+      paginatedResults,
+      currentPage,
+      currentUser
+    })
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json("Unable to view page")
+  }
+
+}
+
+});
+
+//View user followers
+router.get("/:id/followers", async (req, res) => {
+const currentUser = req.user;
+const viewedUser = await User.findById(req.params.id);
+const pageHeading = viewedUser.username + "'s Followers";
+let accounts = [];
+
+if (currentUser && currentUser.id === viewedUser.id || !viewedUser.isPrivate || viewedUser.followers.includes(currentUser.id)) {
+
+  try {
+    accounts = await User.find({following: viewedUser.id})
+
+    // Pagination
+    const currentPage = parseInt(req.query.page) || 1;
+    const pageSize = 10;
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = currentPage * pageSize;
+    const paginatedResults = {};
+    paginatedResults.results = accounts.slice(startIndex, endIndex);
+
+    res.render("followers_following", {
+      title: viewedUser.username + "'s' Followers",
+      viewedUser,
+      accounts,
+      pageHeading,
+      paginatedResults,
+      currentPage,
+      currentUser
+    })
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json("Unable to view page")
+  }
+
+}
+
+});
 
 module.exports = router

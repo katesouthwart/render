@@ -338,6 +338,18 @@ p {
   color: #F0997D;
 }
 
+.profile-followers {
+  color: #A75D5D;
+}
+
+.profile-followers:hover {
+  color: #F0997D;
+  text-decoration: underline;
+}
+.private-profile-followers {
+  color: #A75D5D;
+}
+
 .profile-link {
   color: black;
 }
@@ -363,8 +375,23 @@ p {
   border-color: transparent;
 }
 
-.post-times {
+/* .post-times {
   height: 100px;
+} */
+
+.profile-info {
+  margin-top: -2rem;
+}
+
+.user-container {
+  height: 150px;
+}
+
+.directory-profile-pic {
+  height: 45px;
+  width: 45px;
+  object-fit: cover;
+  border-radius: 50%
 }
 
 /* Timeline */
@@ -376,8 +403,22 @@ p {
   border-radius: 8px;
 }
 
+
+
 @media screen and (max-width: 767px) {
   .timeline-post-img img {
+    height: 400px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .post-img {
+    height: 500px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .post-img {
     height: 400px;
   }
 }
