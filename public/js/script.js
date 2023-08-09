@@ -1,3 +1,16 @@
+//Auth modal
+const failedAuth = new Event("failedAuth");
+const redirectField = $('#redirectUrlField');
+
+document.addEventListener("failedAuth", () => {
+  $('#failed-auth-modal').modal('show');
+});
+
+if(redirectField) {
+  redirectField.val(window.location.pathname);
+}
+
+
 //Post Create Page
 let addIngredientBtn = document.getElementById('addIngredientBtn');
 let ingredientList = document.querySelector('.ingredientList');
@@ -39,8 +52,14 @@ $(document).ready(function() {
     $.ajax({
       url: `/posts/${postId}/like?_=${Date.now()}`,
       method: "PUT",
-      success: function(response) {
-        const updatedLikesCount = parseInt(response.likes);
+      success: function(res) {
+
+        if ("authed" in res && res.authed == false) {
+          document.dispatchEvent(failedAuth)
+          return;
+        }
+
+        const updatedLikesCount = parseInt(res.likes);
 
         likesCountElement.text(updatedLikesCount);
 
@@ -77,8 +96,14 @@ $(document).ready(function() {
     $.ajax({
       url: `/posts/${postId}/save?_=${Date.now()}`,
       method: "PUT",
-      success: function(response) {
-        const updatedSavesCount = parseInt(response.saves);
+      success: function(res) {
+
+        if ("authed" in res && res.authed == false) {
+          document.dispatchEvent(failedAuth)
+          return;
+        }
+
+        const updatedSavesCount = parseInt(res.saves);
 
         savesCountElement.text(updatedSavesCount);
 
@@ -147,7 +172,13 @@ $(document).ready(function () {
       url: `/posts/${postId}/rate`,
       data: { rating: rating },
       dataType: 'json',
-      success: function (response) {
+      success: function (res) {
+
+        if ("authed" in res && res.authed == false) {
+          document.dispatchEvent(failedAuth)
+          return;
+        }
+
         alert('Rating submitted successfully.');
       },
       error: function (error) {
@@ -192,4 +223,42 @@ document.addEventListener('DOMContentLoaded', function() {
       starElement.classList.add('far');
     }
   }
+});
+
+//Follow button script
+$(document).ready(function() {
+  console.log("Document ready");
+
+  const followForm = $("#followForm");
+  console.log(followForm);
+
+  followForm.on("submit", function(event) {
+    event.preventDefault();
+
+    const followButton = $("#followButton");
+    const userId = followButton.data("user-id");
+    const alreadyFollowed = followButton.data("already-followed");
+    const alreadyRequested = followButton.data("already-requested");
+
+    $.ajax({
+      url: `/users/${userId}/follow?_=${Date.now()}`,
+      method: "POST",
+      success: function(res) {
+
+        if ("authed" in res && res.authed == false) {
+          document.dispatchEvent(failedAuth)
+          return;
+        }
+
+        if(res.success = true) {
+          followButton.text(res.buttonText).addClass(res.classes).removeClass(res.removeClasses);
+        }
+
+      },
+      error: function(err) {
+        console.log("Follow request failed:", err);
+      }
+    });
+
+  });
 });

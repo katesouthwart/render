@@ -6,7 +6,7 @@
 
       <div class="row py-4" id="requests-container">
 
-        <% if(paginatedResults.length != "") { %>
+        <% if(paginatedResults.results.length > 0) { %>
         <% paginatedResults.results.forEach(function(user){ %>
 
           <div class="col-12 d-flex user-container flex-wrap border-top border-subtle pt-3 mb-3">
@@ -44,7 +44,7 @@
 
         <%  }); %>
       <% } else { %>
-          <p class="no-more-posts d-none text-center py-5">No Requests Found!</p>
+          <p class="no-more-posts d-none text-center py-5">No Requests Found.</p>
         <% } %>
 
       </div>

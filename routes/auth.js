@@ -34,16 +34,26 @@ router.post("/register", async (req, res) => {
 });
 
 //LOGIN
-
 router.get("/login", (req, res) => {
-  res.render("login");
+  if (req.user) {
+    res.redirect("/posts/timeline/all");
+  } else {
+      res.render("login");
+  }
 });
 
 router.post("/login", passport.authenticate("local", {
   successRedirect: "/posts/timeline/all",
   failureRedirect: "/auth/login"
-
 }));
+
+router.post("/login/modal", passport.authenticate("local", {failureRedirect: '/auth/login', failureMessage: true}), function(req,res) {
+  if(req.body.redirectUrl) {
+    res.redirect(req.body.redirectUrl);
+  } else {
+    res.redirect("/auth/login");
+  }
+});
 
 
 //google oauth2.0
@@ -54,7 +64,7 @@ router.get("/google/timeline/all",
   passport.authenticate("google", {failureRedirect: "/login"}),
   function (req, res) {
     res.redirect("/posts/timeline/all");
-  });
+});
 
 //LOGOUT
 router.get('/logout', function(req, res, next){

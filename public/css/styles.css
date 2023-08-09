@@ -371,9 +371,98 @@ p {
   font-size: 12px;
 }
 
+.edit-profile-picture {
+  height: 120px;
+  width: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.edit-header-img {
+  height: 175px;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.edit-profile-picture:hover {
+  box-shadow: 0px 0px 10px 0px rgba(240,153,125,1);
+  cursor: pointer;
+}
+.edit-header-img:hover {
+  box-shadow: 0px 0px 10px 0px rgba(240,153,125,1);
+  cursor: pointer;
+}
+
 .btn.show {
   border-color: transparent;
 }
+
+.btn-primary {
+  background-color: #A75D5D;
+  color: white;
+  border-color: #A75D5D;
+}
+
+.btn-primary:hover {
+  background-color: #F0997D;
+  border-color: #F0997D;
+}
+
+.btn-primary:focus {
+  background-color: #F0997D;
+  border-color: #F0997D;
+  box-shadow: none;
+}
+
+.btn-outline-primary {
+  color: #A75D5D;
+  border-color: #A75D5D;
+}
+
+.btn-outline-primary:hover {
+  background-color: #F0997D;
+  border-color: #F0997D;
+}
+
+.btn-outline-primary:focus {
+  background-color: white;
+  border-color: #A75D5D;
+  box-shadow: none;
+  color: #A75D5D;
+}
+
+.btn-outline-primary:active {
+  color: #A75D5D;
+  background-color: white !important;
+  borden-color: white !important;
+}
+
+.btn-outline-primary:focus-visible {
+  box-shadow: none;
+}
+
+.auth-modal-btn {
+  width: 90px;
+}
+
+.x-btn {
+  border: none;
+  background-color: transparent;
+  font-size: 24px;
+}
+
+
+
+.form-check-input:checked {
+  background-color: #D3756B;
+  border-color: #D3756B;
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgb(240, 153, 125, .25);
+  border-color: #D3756B;
+}
+
 
 /* .post-times {
   height: 100px;

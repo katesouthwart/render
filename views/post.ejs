@@ -131,9 +131,9 @@
       </div>
     </div>
 
-    <div class="row pt-4 align-items-start">
+    <div class="d-flex pt-4 align-items-start flex-wrap">
 
-      <div class="row col-12 col-lg-4 pb-5">
+      <div class="col-12 col-lg-4 pe-lg-4 pb-5">
         <h4 class="form-label">Ingredients</h4>
         <ul class="list-group list-group-flush">
 
@@ -143,7 +143,7 @@
         </ul>
       </div>
 
-      <div class="row col-12 col-lg-8 ms-lg-4 pb-5">
+      <div class="col-12 col-lg-8 ps-lg-2 pb-5">
         <h4 class="form-label">Directions</h4>
         <ul class="list-group list-group-flush">
 
@@ -155,7 +155,7 @@
 
     </div>
 
-    <div class="row my-5" id="rate">
+    <div class="d-flex flex-wrap my-5" id="rate">
       <div class="col-10 col-md-7 col-lg-6 text-center mx-auto text-bg-light rounded-3 py-5 ">
 
         <script>
@@ -191,16 +191,23 @@
 
     </div>
 
-    <div class="row my-5" id="comments">
-      <form class="mx-auto col-12 col-md-10 col-lg-8" action="/comments/create" method="post">
-        <input type="hidden" name="parentPostId" value="<%= post._id %>">
-        <input type="hidden" name="commentAuthorId" value="<%= currentUser._id %>">
-        <textarea class="form-control" name="commentText" rows="4" cols="80" maxlength="1000" placeholder="Leave a comment, give feedback, or let others know how you liked this recipe!"></textarea>
-        <div class="text-center">
-          <button type="submit" class="mt-3 px-5 btn btn-primary form-submit-btn">Comment</button>
+    <div class="d-flex flex-wrap my-5" id="comments">
+
+      <% if (currentUser) { %>
+        <form class="mx-auto col-12 col-md-10 col-lg-8" action="/comments/create" method="post">
+          <input type="hidden" name="parentPostId" value="<%= post._id %>">
+          <input type="hidden" name="commentAuthorId" value="<%= currentUser._id %>">
+          <textarea class="form-control" name="commentText" rows="4" cols="80" maxlength="1000" placeholder="Leave a comment, give feedback, or let others know how you liked this recipe!"></textarea>
+          <div class="text-center">
+            <button type="submit" class="mt-3 px-5 btn btn-primary form-submit-btn">Comment</button>
+          </div>
+        </form>
+      <% } else { %>
+        <div class="d-flex col-12 justify-content-center pb-3">
+          <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#failed-auth-modal">Sign in to leave a comment.</button>
         </div>
 
-      </form>
+      <% } %>
 
       <div class="col-12 col-md-11 col-lg-10 mx-auto my-5">
 

@@ -1,21 +1,11 @@
 <div class="container">
   <div class="row">
-    <div class="col-12 col-md-9 mx-auto mb-5">
+    <div class="col-12 col-lg-9 mx-auto mb-5">
 
-      <div class="col-12 d-flex  py-4  flex-wrap">
-          <div class="col-12 d-flex justify-content-center">
-            <h6>Hey, <%= currentUser.username %>!</h6>
-          </div>
-          <div class="col-12 d-flex justify-content-center pb-2">
-                <h5 class="me-2"> Have a recipe to share?</h5>
-          </div>
-          <div class="col-12 d-flex align-items-center justify-content-center">
-            <a href="/posts/create" class="btn btn-primary btn-dark form-submit-btn px-4 me-md-2 ms-2">Create Recipe</a>
-          </div>
-      </div>
+      <h2 class="heading-white-bg py-3"><%= pageHeading  %></h2>
 
 
-      <div class="row" id="posts-container">
+      <div class="row py-4 " id="posts-container">
 
         <% if(paginatedResults.length != "") { %>
         <% paginatedResults.results.forEach(function(post, index) { %>
@@ -25,7 +15,7 @@
         <% if (post.author.id.toString() === currentUser.id) { %>
 
 
-        <div class="py-3 col-12 mx-auto  border-top border-light-subtle profile-post">
+        <div class="py-3 col-12 mx-auto border-top border-light-subtle profile-post">
           <div class="d-flex col-12 justify-content-between flex-wrap">
 
 
@@ -97,18 +87,18 @@
 
                 <div class="d-flex justify-content-between col-12 col-md-6 ps-md-5">
 
-                  <div class="d-flex justify-content-start justify-content-md-start col-4  align-items-center">
+                  <div class="d-flex justify-content-start justify-content-md-start col-4 col-md-2 align-items-center">
                     <button class="like-button profile-link d-flex justify-content-center px-0 <%= post.alreadyLiked ? 'liked' : '' %>" data-post-id="<%= post.id %>" data-already-liked="<%= post.alreadyLiked %>">
                       <i class="fa-heart profile-icon-color me-2 <%= post.alreadyLiked ? 'fa-solid' : 'fa-regular' %>"></i>
                     </button>
                     <p class="likes-count mb-0"><%= post.likes.length %></p>
                   </div>
 
-                  <div class="d-flex justify-content-center justify-content-md-start col-4 ">
+                  <div class="d-flex justify-content-center justify-content-md-start col-4 col-md-2">
                     <a href="/posts/<%= post.id %>/#comments" class="profile-link"><i class="fa-regular fa-comment profile-icon-color me-2"></i><%= post.commentCount %></a>
                   </div>
 
-                  <div class="d-flex justify-content-end justify-content-md-start col-4  align-items-center">
+                  <div class="d-flex justify-content-end justify-content-md-start col-4 col-md-2 align-items-center">
                     <button class="save-button profile-link d-flex justify-content-center px-0 <%= post.alreadySaved ? 'saved' : '' %>" data-post-id="<%= post.id %>" data-already-saved="<%= post.alreadySaved %>">
                       <i class="fa-bookmark profile-icon-color me-2 <%= post.alreadySaved ? 'fa-solid' : 'fa-regular' %>"></i>
                     </button>
@@ -164,18 +154,18 @@
 
                   <div class="d-flex justify-content-between col-12 col-md-6 ps-md-5">
 
-                    <div class="d-flex justify-content-start justify-content-md-start col-4 align-items-center">
+                    <div class="d-flex justify-content-start justify-content-md-start col-4 col-md-2 align-items-center">
                       <button class="like-button profile-link d-flex justify-content-center px-0 <%= post.alreadyLiked ? 'liked' : '' %>" data-post-id="<%= post.id %>" data-already-liked="<%= post.alreadyLiked %>">
                         <i class="fa-heart profile-icon-color me-2 <%= post.alreadyLiked ? 'fa-solid' : 'fa-regular' %>"></i>
                       </button>
                       <p class="likes-count mb-0"><%= post.likes.length %></p>
                     </div>
 
-                    <div class="d-flex justify-content-center justify-content-md-start col-4">
+                    <div class="d-flex justify-content-center justify-content-md-start col-4 col-md-2">
                       <a href="/posts/<%= post.id %>/#comments" class="profile-link"><i class="fa-regular fa-comment profile-icon-color me-2"></i><%= post.commentCount %></a>
                     </div>
 
-                    <div class="d-flex justify-content-end justify-content-md-start col-4 align-items-center">
+                    <div class="d-flex justify-content-end justify-content-md-start col-4 col-md-2 align-items-center">
                       <button class="save-button profile-link d-flex justify-content-center px-0 <%= post.alreadySaved ? 'saved' : '' %>" data-post-id="<%= post.id %>" data-already-saved="<%= post.alreadySaved %>">
                         <i class="fa-bookmark profile-icon-color me-2 <%= post.alreadySaved ? 'fa-solid' : 'fa-regular' %>"></i>
                       </button>

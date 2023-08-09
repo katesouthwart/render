@@ -1,13 +1,7 @@
 <div class="px-4 pt-5 pb-3 text-center">
-  <h1 class="display-6 fw-bold heading-white-bg">Create a Recipe</h1>
+  <h3 class="display-6 fw-bold heading-white-bg">Edit Recipe</h3>
   <div class="col-lg-6 mx-auto">
-
-
-    <% if (user && user.isPrivate) { %>
-          <p class="lead">Share your recipes with your friends and followers!</p>
-    <% } else { %>
-          <p class="lead">Share your recipes with users across the world!</p>
-    <% } %>
+      <p class="lead text-secondary">Editing recipe: "<%= post.title %>"</p>
   </div>
 </div>
 
@@ -21,28 +15,32 @@
 
   <div class="col-10 col-md-8 col-lg-6">
 
-    <form class="" action="/posts/create" enctype="multipart/form-data" method="post">
+    <form class="" action="/posts/<%= post.id %>/edit" enctype="multipart/form-data" method="post">
 
       <div class="row g-4">
 
-          <input type="hidden" name="author" value="<%=user.id%>">
+          <!-- <input type="hidden" name="author" value="<%=user.id%>"> -->
 
         <div class="col-12">
           <label for="title" class="form-label">Title</label>
-          <input type="text" class="form-control" name="title" id="title" max="40" required>
+          <input type="text" class="form-control" name="title" id="title" max="40" value="<%= post.title %>" required>
         </div>
 
         <div class="col-12">
           <label for="desc" class="form-label">Description</label>
-          <textarea name="desc" class="form-control" rows="4" cols="30" max="200" id="desc" required></textarea>
+          <textarea name="desc" class="form-control" rows="4" cols="30" max="200" id="desc" required><%= post.desc %></textarea>
         </div>
 
         <div class="col-12">
           <label for="ingredients" class="form-label">Ingredients</label><br>
           <div class="ingredientList">
-            <div class="ingredientDiv mb-1">
-              <input type="text" name="ingredients" class="form-control" placeholder="Example: '1 tsp Baking Powder'">
-            </div>
+
+              <% post.ingredients.forEach(function(ingredient, index) { %>
+                <div class="ingredientDiv mb-1">
+                  <input type="text" name="ingredients" class="form-control" value="<%= ingredient %>">
+                </div>
+              <% }); %>
+
           </div>
         </div>
 
@@ -53,9 +51,14 @@
         <div class="col-12">
           <label for="instructions" class="form-label">Instructions</label><br>
           <div class="instructionList">
-            <div class="instructionDiv mb-1">
-              <input type="text" name="instructions" class="form-control" placeholder="Example: 'Combine the baking soda, salt, and flour.'">
-            </div>
+
+            <% post.instructions.forEach(function(instruction, index) { %>
+              <div class="instructionDiv mb-1">
+                <input type="text" name="instructions" class="form-control" value="<%= instruction %>">
+              </div>
+
+            <% }); %>
+
           </div>
         </div>
 
@@ -70,7 +73,10 @@
             <option selected>Select a Category</option>
 
             <% categories.forEach(function(category, index) { %>
-              <option value="<%= category.name %>"><%= category.name %></option>
+              <option
+                <%= category.name == post.category ? 'selected' : '' %>
+                value="<%= category.name %>"><%= category.name %>
+              </option>
             <% });%>
 
           </select>
@@ -78,18 +84,18 @@
 
         <div class="col-12">
           <label class="form-label" for="servings">Servings</label>
-          <input type="number" name="servings" min="1" step="1" onblur="this.value = Math.round(this.value);" class="form-control">
+          <input type="number" name="servings" min="1" step="1" onblur="this.value = Math.round(this.value);" class="form-control" value="<%= post.servings %>" >
         </div>
 
         <div class="col-12">
           <label class="form-label" for="">Prep Time</label><br>
           <div class="form-group d-flex">
             <div class="d-flex align-items-center form-group input-group me-3">
-              <input type="number" name="prepHours" min="0" step="1" onblur="this.value = Math.round(this.value);" class="form-control">
+              <input type="number" name="prepHours" min="0" step="1" onblur="this.value = Math.round(this.value);" class="form-control" value="<%= post.prepHours %>">
               <label class="input-group-text" for="prepHours">Hours</label>
             </div>
             <div class="d-flex align-items-center form-group input-group ms-3">
-              <input type="number" name="prepMins" min="0" step="1" onblur="this.value = Math.round(this.value);" class="form-control">
+              <input type="number" name="prepMins" min="0" step="1" onblur="this.value = Math.round(this.value);" class="form-control" value="<%= post.prepMins %>">
               <label class="input-group-text" for="prepMins">Minutes</label>
             </div>
           </div>
@@ -100,23 +106,23 @@
           <label class="form-label" for="">Cook Time</label><br>
           <div class="form-group d-flex">
             <div class="align-items-center form-group input-group me-3">
-              <input type="number" name="cookHours" min="0" step="1" onblur="this.value = Math.round(this.value);" class="form-control">
+              <input type="number" name="cookHours" min="0" step="1" onblur="this.value = Math.round(this.value);" class="form-control" value="<%= post.cookHours %>">
               <label class="input-group-text" for="cookHours">Hours</label>
             </div>
             <div class="align-items-center form-group input-group ms-3">
-              <input type="number" name="cookMins" min="0" step="1" onblur="this.value = Math.round(this.value);" class="form-control">
+              <input type="number" name="cookMins" min="0" step="1" onblur="this.value = Math.round(this.value);" class="form-control" value="<%= post.cookMins %>">
               <label class="input-group-text" for="cookMins">Minutes</label>
             </div>
           </div>
         </div>
 
-        <div class="col-12">
+        <!-- <div class="col-12">
           <label class="form-label" for="img">Recipe Image</label>
-          <input type="file" class="form-control" required name="img" accept="image/*">
-        </div>
+          <input type="file" class="form-control" required name="img" accept="image/*" >
+        </div> -->
 
-        <div class="col-12 text-center my-5">
-          <button type="submit" class="btn btn-primary form-submit-btn" name="button">Submit Recipe</button>
+        <div class="col-12 text-center my-5 pb-5">
+          <button type="submit" class="btn btn-primary form-submit-btn" name="button">Update Recipe</button>
         </div>
 
       </div>

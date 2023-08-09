@@ -1,0 +1,84 @@
+<div class="container py-5">
+  <div class="row">
+    <div class="col-12 col-md-8 col-lg-6 mx-auto mb-5">
+      <h3 class="display-6 fw-bold heading-white-bg text-center">User Settings</h3>
+
+      <form class="col-12" action="/users/<%= user.id %>/settings" enctype="multipart/form-data" method="post">
+
+
+        <div class="d-flex col-12 flex-wrap">
+          <img src="/uploads/<%= user.headerPicture %>" data-bs-toggle="modal" data-bs-target="#header-edit-modal" onerror="this.onerror=null; this.src='/uploads/flame header.png';" class="img-fluid edit-header-img col-12 mx-auto my-4"
+            alt="<%= user.username %>" loading="lazy">
+
+          <div class="col-12 d-flex flex-wrap">
+
+            <div class="col-12 pb-4 d-flex">
+              <div class="col-4 ms-3">
+                <img src="/uploads/<%= user.profilePicture %>" data-bs-toggle="modal" data-bs-target="#profilepic-edit-modal" onerror="this.onerror=null; this.src='/uploads/flame.PNG';" class="img-fluid edit-profile-picture col-12 col-lg-3"
+                  alt="<%= user.username %>" loading="lazy">
+              </div>
+
+              <div class="col-8 d-flex align-items-center pe-3">
+                <div class="col-12">
+                  <label for="title" class="form-label">Username</label>
+                  <input type="text" class="form-control" name="username" id="username" max="40" value="<%= user.username %>" required>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="desc" class="form-label">Bio</label>
+              <textarea name="desc" class="form-control" rows="4" cols="30" max="150" id="desc" required><%= user.desc %></textarea>
+            </div>
+
+
+            <div class="pt-5 col-12 pb-2">
+              <div class="text-center pb-4">
+                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecurity" aria-expanded="false" aria-controls="collapseSecurity">
+                  Security Settings
+                </button>
+              </div>
+
+
+              <div class="collapse" id="collapseSecurity">
+                <div class="card card-body">
+
+                  <div class="col-12 pb-4">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" name="email" id="email" max="40" value="<%= user.email %>" required>
+                  </div>
+
+
+                  <div class="form-check form-switch d-flex flex-wrap ps-0 pb-4">
+                    <label class="form-check-label col-12 form-label" for="isPrivate">Private Profile</label>
+                    <input class="form-check-input col-12 ms-0" type="checkbox" role="switch" id="isPrivate" name="isPrivate" <% if (user.isPrivate) { %>checked<% } %>>
+                  </div>
+
+                  <div class="">
+
+                    <!-- security?
+                                email
+                                isPrivate
+                                password
+                                delete -->
+
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 text-center my-4">
+              <button type="submit" class="btn btn-primary" name="button">Save Changes</button>
+            </div>
+
+
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

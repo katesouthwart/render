@@ -20,11 +20,15 @@
             <div class="col-11 ps-3 d-flex justify-content-between flex-wrap">
               <a href="/users/<%= user.id %>" class="form-label profile-followers"><h5><%= user.username %></h5></a>
 
-              <div class="col-2 d-flex justify-content-end">
-                <form class="" action="/users/<%= user._id %>/follow" method="post">
-                  <button class="btn btn-outline-primary form-add-btn" type="submit" name="">Follow</button>
-                </form>
-              </div>
+              <% if (currentUser._id.toString() != user._id.toString()) { %>
+                <div class="col-2 d-flex justify-content-end">
+                  <form id="followForm" action="/users/<%= user._id %>/follow" method="post">
+                    <button id="followButton" class="follow-button btn btn-lg <%= user.alreadyFollowed ? 'btn-outline-primary followed' : (user.alreadyRequested ? 'btn-outline-primary requested' : 'btn-primary') %>" data-user-id="<%= user._id %>" data-already-followed="<%= user.alreadyFollowed %>" data-already-requested="<%= user.alreadyRequested %>" type="submit" name="followBtn">
+                      <%= user.alreadyFollowed ? 'Following' : (user.alreadyRequested ? 'Requested' : 'Follow') %>
+                    </button>
+                  </form>
+                </div>
+              <% } %>
 
               <p class="text-break col-12 pt-2"> <%= user.desc %> </p>
             </div>

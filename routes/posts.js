@@ -2,17 +2,27 @@ const router = require("express").Router();
 const Post = require("../models/Post");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
+const Category = require("../models/Category");
 const { formatTimestamp } = require('../public/js/helpers');
 
 //Create a post
 router.get("/create", async (req, res) => {
   const infoErrorsObj = req.flash("infoErrors");
-  const infoSubmitObj = req.flash("infoSubmit");
-  res.render("post_create", {
-    title: "Render - Create a Recipe",
-    infoErrorsObj,
-    infoSubmitObj
-  });
+  try {
+    const categories = await Category.find();
+
+    res.render("post_create", {
+      title: "Render - Create a Recipe",
+      infoErrorsObj,
+      categories
+    });
+
+
+  } catch (err) {
+    res.status(500).json(err);
+  }
+
+
 });
 
 router.post("/create", async (req, res) => {
@@ -25,10 +35,10 @@ router.post("/create", async (req, res) => {
     let newImageName;
 
     if (!req.files || Object.keys(req.files).length === 0) {
-      console.log("No files uplaoded");
+      console.log("No files uploaded");
     } else {
       imageUploadFile = req.files.img;
-      newImageName = Date.now() + imageUploadFile.name;
+      newImageName = Date.now() + imageUploadFile.name + req.user.id;
 
       uploadPath = require("path").resolve("./") + "/public/uploads/" + newImageName;
 
@@ -103,8 +113,40 @@ router.post("/:id/edit", async (req, res) => {
     const post = await Post.findById(req.params.id);
 
     if (post.author.toString() === req.user.id || req.user.isAdmin) {
-      await post.updateOne({ $set: req.body });
-      res.status(200).json("Post successfully updated.");
+
+      //Time
+      let prepMins = req.body.prepMins || 0;
+        prepMins = prepMins.toString().padStart(2, '0');
+      let prepHours = req.body.prepHours || 0;
+        prepHours = prepHours.toString().padStart(2, '0');
+      let cookMins = req.body.cookMins || 0;
+        cookMins = cookMins.toString().padStart(2, '0');
+      let cookHours = req.body.cookHours || 0;
+        cookHours = cookHours.toString().padStart(2, '0');
+
+      const totalMins = Number(prepHours * 60) + Number(cookHours * 60) + Number(prepMins) + Number(cookMins);
+
+      let displayHours = Number(Math.floor(totalMins / 60));
+        displayHours =  displayHours.toString().padStart(2, '0');
+      let displayMins = Number(totalMins % 60);
+        displayMins =  displayMins.toString().padStart(2, '0');
+
+      await post.updateOne({ "$set": {
+        "title": req.body.title,
+        "desc": req.body.desc,
+        "ingredients": req.body.ingredients,
+        "instructions": req.body.instructions,
+        "category": req.body.category,
+        "servings": req.body.servings,
+        "prepHours": prepHours,
+        "prepMins": prepMins,
+        "cookHours": cookHours,
+        "cookMins": cookMins,
+        "totalMins": totalMins,
+        "displayHours": displayHours,
+        "displayMins": displayMins,
+      } });
+      res.redirect("/posts/" + post.id);
     } else {
       res.status(403).json("You can only edit your own posts.");
     }
@@ -115,7 +157,30 @@ router.post("/:id/edit", async (req, res) => {
 });
 
 router.get("/:id/edit", async (req, res) => {
-  res.render("edit_post");
+  try {
+    if (req.user) {
+      const currentUserId = req.user.id;
+      const post = await Post.findById(req.params.id);
+      const author = post.author;
+      const categories = await Category.find();
+
+      if (currentUserId == author) {
+        const infoErrorsObj = req.flash("infoErrors");
+        res.render("post_edit", {
+          title: "Render - Edit Recipe",
+          post,
+          infoErrorsObj,
+          categories
+        });
+      } else {
+        res.redirect("/posts/timeline/all");
+      }
+    } else {
+      res.redirect("/auth/login");
+    }
+  } catch (err) {
+    res.status(500).json("You can only edit your own posts.")
+  }
 });
 
 //Delete a post
@@ -186,8 +251,10 @@ router.put("/:id/like", async (req, res) => {
         res.status(200).json({ message: "The post has been un-liked.", likes: post.likes.length, alreadyLiked: false });
       }
     } else {
-
-      res.redirect("/auth/login");
+      res.status(200).json({
+        message: "Users must be logged in to like posts.",
+        authed: false
+      });
     }
   } catch (err) {
     console.error(err);
@@ -226,8 +293,10 @@ router.put("/:id/save", async (req, res) => {
         res.status(200).json({ message: "The post has been un-saved.", saves: post.saves.length, alreadySaved: false });
       }
     } else {
-
-      res.redirect("/auth/login");
+      res.status(200).json({
+        message: "Users must be logged in to save posts.",
+        authed: false
+      });
     }
   } catch (err) {
     console.error(err);
@@ -238,22 +307,30 @@ router.put("/:id/save", async (req, res) => {
 //Submit rating for a post
 router.post("/:id/rate", async (req, res) => {
   try {
-    const postId = req.params.id;
-    const currentUserId = req.user.id;
-    const rating = req.body.rating;
+    if (req.user) {
+      const postId = req.params.id;
+      const currentUserId = req.user.id;
+      const rating = req.body.rating;
 
-    const post = await Post.findOne({ _id: postId, 'reviews.user': currentUserId});
-    if (post) {
-      await Post.updateOne(
-        { _id: postId, 'reviews.user': currentUserId },
-        { $set : { 'reviews.$.rating': rating } }
-      );
+      const post = await Post.findOne({ _id: postId, 'reviews.user': currentUserId});
+      if (post) {
+        await Post.updateOne(
+          { _id: postId, 'reviews.user': currentUserId },
+          { $set : { 'reviews.$.rating': rating } }
+        );
+      } else {
+        await Post.findByIdAndUpdate(postId, {
+          $push: {reviews: {user: currentUserId, rating: rating } }
+        });
+      }
+      res.status(200).json("Rating submitted successfully.");
+
     } else {
-      await Post.findByIdAndUpdate(postId, {
-        $push: {reviews: {user: currentUserId, rating: rating } }
+      res.status(200).json({
+        message: "Users must be logged in to rate posts.",
+        authed: false
       });
     }
-    res.status(200).json("Rating submitted successfully.");
 
   } catch (err) {
     res.status(500).json(err);
@@ -330,10 +407,7 @@ router.get("/:id", async (req, res) => {
         userReviewScores
       });
     } else {
-        res.render("protected", {
-          title: "Render - Recipe",
-          viewedUser: author
-        })
+        res.redirect("/users/" + author.id);
       }
 
     } catch (err) {
@@ -408,6 +482,5 @@ router.get("/timeline/all", async (req, res) => {
   }
 
 });
-
 
 module.exports = router;

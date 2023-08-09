@@ -48,7 +48,138 @@
     </footer>
   </div>
 
+<!-- login auth modal -->
+  <div class="modal fade" id="failed-auth-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
 
+        <div class="d-flex modal-header flex-wrap">
+          <div class="d-flex col-12 justify-content-end">
+            <button type="button" class="close x-btn" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="col-12 mx-auto justify-content-center d-flex">
+            <h5 class="modal-title fw-bold" id="modal-title">Please sign in.</h5>
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap col-8 modal-footer mx-auto justify-content-center">
+
+          <div class="d-flex">
+            <form action="/auth/login/modal" method="POST">
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" name="email">
+              </div>
+              <div class="form-group pt-2">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password">
+              </div>
+              <input type="hidden" name="reload" value="true">
+              <input type="hidden" name="redirectUrl" id="redirectUrlField">
+              <div class="">
+                <button type="submit" class="btn btn-primary d-flex mx-auto mt-3 auth-modal-btn justify-content-center">Login</button>
+              </div>
+
+            </form>
+          </div>
+
+          <div class="d-flex py-3">
+            <form class="" action="/auth/register" method="get">
+              <button class="btn btn-dark auth-modal-btn" type="button" onclick="">Register</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<% if (user) { %>
+  <!-- profile img upload modal -->
+    <div class="modal fade" id="profilepic-edit-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <div class="modal-header d-flex flex-wrap">
+            <div class="d-flex col-12 justify-content-end">
+              <button type="button" class="close x-btn" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="col-12 mx-auto justify-content-center d-flex">
+                <h5 class="modal-title fw-bold" id="modal-title">Image Upload</h5>
+            </div>
+
+          </div>
+
+          <div class="modal-body py-0">
+            <p class="text-secondary text-center">Upload an image for your profile picture.</p>
+          </div>
+
+          <div class="col-12 modal-footer justify-content-center">
+
+            <form class="col-12" action="/users/<%= user.id %>/settings/profilepic" enctype="multipart/form-data" method="post">
+
+              <div class="col-12 px-2">
+                <label class="form-label" for="img">Profile Picture</label>
+                <input type="file" class="form-control" required name="img" accept="image/*">
+              </div>
+
+              <div class="col-12 text-center my-4">
+                <button type="submit" class="btn btn-primary" name="button">Upload</button>
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- header img upload modal -->
+    <div class="modal fade" id="header-edit-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <div class="modal-header d-flex flex-wrap">
+            <div class="d-flex col-12 justify-content-end">
+              <button type="button" class="close x-btn" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="col-12 mx-auto justify-content-center d-flex">
+                <h5 class="modal-title fw-bold" id="modal-title">Image Upload</h5>
+            </div>
+
+          </div>
+
+          <div class="modal-body py-0">
+            <p class="text-secondary text-center">Upload an image for your profile header.</p>
+          </div>
+
+          <div class="col-12 modal-footer justify-content-center">
+
+            <form class="col-12" action="/users/<%= user.id %>/settings/header" enctype="multipart/form-data" method="post">
+
+              <div class="col-12 px-2">
+                <label class="form-label" for="img">Header Image</label>
+                <input type="file" class="form-control" required name="img" accept="image/*">
+              </div>
+
+              <div class="col-12 text-center my-4">
+                <button type="submit" class="btn btn-primary" name="button">Upload</button>
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+<% } %>
 
 
   <script src="https://kit.fontawesome.com/bbaf710261.js" crossorigin="anonymous"></script>

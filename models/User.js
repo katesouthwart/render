@@ -56,10 +56,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     max: 150
   },
-  city: {
-    type: String,
-    max: 50
-  },
+  // city: {
+  //   type: String,
+  //   max: 50
+  // },
   isAuthor: {
     type: Boolean,
     default: false
