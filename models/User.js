@@ -5,10 +5,22 @@ const findOrCreate = require("mongoose-findorcreate");
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
+    // required: true,
+    min: 3,
+    max: 28,
+    unique: true
+  },
+  usernameLower: {
+    type: String,
+    min: 3,
+    max: 28,
+    unique: true
+  },
+  displayName: {
+    type: String,
     required: true,
     min: 3,
-    max: 30,
-    // unique: true
+    max: 30
   },
   email: {
     type: String,

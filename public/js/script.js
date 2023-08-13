@@ -262,3 +262,126 @@ $(document).ready(function() {
 
   });
 });
+
+//User Delete script
+function deleteUser(userId) {
+  $.ajax({
+    url: `/users/${userId}/delete`,
+    method: "DELETE",
+    success: function(res) {
+
+      const homeUrl = '/';
+
+      if(res.success = true) {
+        window.location.href = homeUrl;
+      } else {
+        alert('Could not delete user, please try again.');
+      }
+    },
+    error: function(err) {
+      console.log("Follow request failed:", err);
+    }
+  });
+}
+
+//user register password
+function checkPassword() {
+  console.log('sending');
+  const password = $('#password').val();
+
+  $.ajax({
+    url: `/auth/checkpassword`,
+    method: "POST",
+    data: {
+      password: password,
+    },
+    success: function(res) {
+      console.log(res);
+      if(res.success == true) {
+        $('#password-failure').removeClass('d-inline').addClass('d-none');
+        $('#upassword-success').removeClass('d-none').addClass('d-inline');
+        $('#saveUserButton').removeClass('btn-outline-disabled').addClass('btn-primary').prop("disabled", false);
+        $('#registerButton').removeClass('btn-outline-disabled').addClass('btn-primary').prop("disabled", false);
+      } else {
+        $('#password-success').removeClass('d-inline').addClass('d-none');
+        $('#password-failure').removeClass('d-none').addClass('d-inline');
+        $('#saveUserButton').removeClass('btn-primary').addClass('btn-outline-disabled').prop("disabled", true);
+        $('#registerButton').removeClass('btn-primary').addClass('btn-outline-disabled').prop("disabled", true);
+      }
+    },
+    error: function(err) {
+      console.log("Error updating password:", err);
+    }
+  });
+}
+
+// user change Password
+function userChangePassword(userId) {
+  const oldPassword = $('#oldPassword').val();
+  const newPasswordOne = $('#newPasswordOne').val();
+  const newPasswordTwo = $('#newPasswordTwo').val();
+
+  $.ajax({
+    url: `/auth/${userId}/changepassword`,
+    method: "POST",
+    data: {
+      newPasswordOne: newPasswordOne,
+      newPasswordTwo: newPasswordTwo,
+      oldPassword: oldPassword
+    },
+    success: function(res) {
+      if(res.success == true) {
+        $('#change-password-modal').modal('hide');
+        $('#password-failure-alert').removeClass('d-block').addClass('d-none');
+        $('#password-success-alert').removeClass('d-none').addClass('d-block');
+      } else {
+        $('#change-password-modal').modal('hide');
+        $('#password-failure-alert').removeClass('d-none').addClass('d-block').text(res.message);
+      }
+    },
+    error: function(err) {
+      console.log("Error updating password:", err);
+    }
+  });
+}
+
+// user change Username
+function userChangeUsername() {
+  console.log('sending');
+  const username = $('#username').val();
+
+  $.ajax({
+    url: `/auth/checkusername`,
+    method: "POST",
+    data: {
+      username: username,
+    },
+    success: function(res) {
+      console.log(res);
+      if(res.success == true) {
+        $('#username-change-failure').removeClass('d-inline').addClass('d-none');
+        $('#username-change-success').removeClass('d-none').addClass('d-inline');
+        $('#saveUserButton').removeClass('btn-outline-disabled').addClass('btn-primary').prop("disabled", false);
+        $('#registerButton').removeClass('btn-outline-disabled').addClass('btn-primary').prop("disabled", false);
+      } else {
+        $('#username-change-success').removeClass('d-inline').addClass('d-none');
+        $('#username-change-failure').removeClass('d-none').addClass('d-inline');
+        $('#saveUserButton').removeClass('btn-primary').addClass('btn-outline-disabled').prop("disabled", true);
+        $('#registerButton').removeClass('btn-primary').addClass('btn-outline-disabled').prop("disabled", true);
+      }
+    },
+    error: function(err) {
+      console.log("Error updating username:", err);
+    }
+  });
+}
+
+//lowercase email
+$(document).ready(function() {
+  $('#email').on("focusout", function() {
+    const email = $('#email').val();
+    const lowercaseEmail = email.toLowerCase();
+
+    $("#email").val(lowercaseEmail);
+  })
+});

@@ -63,6 +63,19 @@ p {
   color: white;
 }
 
+/* Login / Registration */
+.leftSide, .rightSide {
+  height: 100vh;
+  width: 100%
+}
+
+
+.rightSide {
+  background-color: #D3756B;
+}
+
+
+
 /* breadcrumbs */
 .breadcrumb-item > a {
   color: #A75D5D;
@@ -393,8 +406,24 @@ p {
   cursor: pointer;
 }
 
+.bg-success {
+  background-color: #94B49F !important;
+  border-radius: 8px;
+}
+
+.bg-danger {
+  background-color: #D3756B !important;
+  border-radius: 8px;
+}
+
+
 .btn.show {
   border-color: transparent;
+}
+
+.btn-outline-disabled {
+  cursor: not-allowed;
+  pointer-events: auto !important;
 }
 
 .btn-primary {
@@ -492,7 +521,17 @@ p {
   border-radius: 8px;
 }
 
+@media screen and (min-width: 767px) {
+  .auth-container {
+    width: 310px;
+  }
+}
 
+@media screen and (min-width: 767px) {
+  .leftSide {
+    width: 370px;
+  }
+}
 
 @media screen and (max-width: 767px) {
   .timeline-post-img img {

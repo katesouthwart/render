@@ -22,8 +22,9 @@
 
       <div class="ps-5 profile-info">
         <div class="">
-          <h1 class="col-12"> <%= profile.username %> </h1>
-          <p class="col-12 mb-2 text-break"> <%= profile.desc %> </p>
+          <h1 class="col-12 mb-0"><%= profile.displayName %> </h1>
+          <p class="text-secondary fw-light fst-italic mb-2">@<%= profile.username %></p>
+          <p class="col-12 mb-2 text-break"><%= profile.desc %> </p>
           <p class="text-secondary">Joined <%= profile.formattedJoinedAt %></p>
         </div>
         <div class="d-flex">

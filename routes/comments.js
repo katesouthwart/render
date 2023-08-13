@@ -6,7 +6,6 @@ const User = require("../models/User");
 //Create a comment
 router.post("/create", async (req, res) => {
   try {
-
     if (req.user) {
 
       const newComment = new Comment({
@@ -19,10 +18,8 @@ router.post("/create", async (req, res) => {
 
       res.redirect("/posts/" + req.body.parentPostId + "#comments");
     } else {
-      //In future, prompt on page login pop-up
       res.redirect("/auth/login");
     }
-
   } catch (err) {
     res.status(500).json(err);
   }
@@ -30,7 +27,6 @@ router.post("/create", async (req, res) => {
 
 //Update a comment
 router.post("/:id/edit", async (req, res) => {
-
   try {
     const comment = await Comment.findById(req.params.id);
 
@@ -43,7 +39,6 @@ router.post("/:id/edit", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-
 });
 
 //Delete a comment
@@ -84,7 +79,6 @@ router.put("/:id/like", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-
 });
 
 module.exports = router;

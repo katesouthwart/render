@@ -13,15 +13,25 @@
           <div class="col-12 d-flex flex-wrap">
 
             <div class="col-12 pb-4 d-flex">
-              <div class="col-4 ms-3">
+              <div class="col-4 ms-3 d-flex align-items-center">
                 <img src="/uploads/<%= user.profilePicture %>" data-bs-toggle="modal" data-bs-target="#profilepic-edit-modal" onerror="this.onerror=null; this.src='/uploads/flame.PNG';" class="img-fluid edit-profile-picture col-12 col-lg-3"
                   alt="<%= user.username %>" loading="lazy">
               </div>
 
-              <div class="col-8 d-flex align-items-center pe-3">
+              <div class="col-8 d-flex align-items-center pe-3 flex-wrap">
                 <div class="col-12">
-                  <label for="title" class="form-label">Username</label>
-                  <input type="text" class="form-control" name="username" id="username" max="40" value="<%= user.username %>" required>
+                  <div class="">
+
+                    <label for="username" class="form-label">Username</label>
+                    <i id="username-change-success" class="fa-solid fa-check text-success ps-1 d-none"></i>
+                    <i id="username-change-failure" class="fa-solid fa-xmark text-danger ps-1 d-none"></i>
+                  </div>
+                  <input type="text" class="form-control" name="username" id="username" onfocusout="userChangeUsername()" min="3" max="27" value="<%= user.username %>" required>
+
+                </div>
+                <div class="col-12 pt-2">
+                  <label for="displayName" class="form-label">Display Name</label>
+                  <input type="text" class="form-control" name="displayName" id="displayName" min="3" max="30" value="<%= user.displayName %>" required>
                 </div>
 
               </div>
@@ -55,15 +65,50 @@
                     <input class="form-check-input col-12 ms-0" type="checkbox" role="switch" id="isPrivate" name="isPrivate" <% if (user.isPrivate) { %>checked<% } %>>
                   </div>
 
-                  <div class="">
-
-                    <!-- security?
-                                email
-                                isPrivate
-                                password
-                                delete -->
-
+                  <div id="password-success-alert" class="col-12 d-none bg-success mb-3 p-3 text-center">
+                    <p class="mb-0 text-white">
+                      Password updated successfully.
+                    </p>
                   </div>
+                  <div id="password-failure-alert" class="col-12 d-none bg-danger mb-3 p-3 text-center text-white">
+                    <p class="mb-0">
+                      Error.
+                    </p>
+                  </div>
+
+                  <div class="text-center pb-4">
+                    <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#change-password-modal"aria-expanded="false">
+                      Change Password
+                    </button>
+                  </div>
+
+                  <div class="text-center pb-4">
+                    <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#user-delete-modal"aria-expanded="false">
+                      Delete account
+                    </button>
+
+                    <div class="modal fade" id="user-delete-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered modal-sm">
+                        <div class="modal-content">
+
+                          <div class="modal-header justify-content-center">
+                            <h5 class="modal-title fw-bold" id="modal-title">Delete Account?</h5>
+                          </div>
+
+                          <div class="modal-body">
+                            <p class="text-secondary text-center">This cannot be undone. Your account and any content created will be deleted forever.</p>
+                          </div>
+
+                          <div class="modal-footer justify-content-center d-flex">
+                            <button class="btn btn-danger col-12" type="button" onclick="deleteUser('<%= user.id %>')">Delete</button>
+                            <button class="btn btn-outline-dark col-12" type="button" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
 
 
                 </div>
@@ -71,7 +116,7 @@
             </div>
 
             <div class="col-12 text-center my-4">
-              <button type="submit" class="btn btn-primary" name="button">Save Changes</button>
+              <button type="submit" class="btn btn-primary" name="button" id="saveUserButton">Save Changes</button>
             </div>
 
 

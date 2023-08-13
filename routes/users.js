@@ -8,6 +8,7 @@ const { formatTimestamp } = require('../public/js/helpers');
 const { formatJoinedDate } = require('../public/js/helpers');
 const fs = require("fs");
 const path = require("path");
+const _ = require("lodash");
 
 //update user
 router.get("/:id/settings", async (req, res) =>{
@@ -41,20 +42,6 @@ router.get("/:id/settings", async (req, res) =>{
 
 router.post("/:id/settings", async (req, res) => {
   if (req.user && req.user.id === req.params.id || req.user.isAdmin) {
-
-    // if (req.body.password) {
-    //   const currentUser = await User.findById(req.user.id);
-    //
-    //   try {
-    //     await currentUser.setPassword(req.body.password);
-    //     await currentUser.save();
-    //   } catch (err) {
-    //     return res.status(422).json(err);
-    //   }
-    //
-    // }
-
-
     if (req.body.isPrivate) {
       req.body.isPrivate = true;
     } else {
@@ -64,6 +51,7 @@ router.post("/:id/settings", async (req, res) => {
     try {
       const currentUser = await User.findByIdAndUpdate(req.user.id, {
         $set: req.body,
+        usernameLower: _.lowerCase(req.body.username)
       });
       return res.redirect("/users/" + req.user.id + "/settings");
     } catch (err) {
@@ -181,7 +169,10 @@ router.delete("/:id/delete", async (req, res) => {
 
     try {
       const currentUser = await User.findByIdAndDelete(req.user.id);
-      res.redirect("/");
+      res.status(200).json({
+        success: true,
+        message: "Successfully deleted user."
+      });
     } catch (err) {
       return res.status(500).json(err);
     }
@@ -220,7 +211,6 @@ router.get("/:id", async (req, res) => {
     const endIndex = currentPage * pageSize;
     const paginatedResults = {};
     paginatedResults.results = posts.slice(startIndex, endIndex);
-
 
     if (req.user) {
       currentUser = await User.findById(req.user.id);
@@ -268,7 +258,7 @@ router.get("/:id", async (req, res) => {
 
     if (currentUser && currentUser.id === viewedUser.id) {
       res.render("profile", {
-        title: viewedUser.username,
+        title: "Render - " + viewedUser.username,
         profile: other,
         paginatedResults,
         currentPage,
@@ -277,7 +267,7 @@ router.get("/:id", async (req, res) => {
       });
     } else if (!viewedUser.isPrivate || viewedUser.followers.includes(currentUser.id)) {
       res.render("user", {
-        title: viewedUser.username,
+        title: "Render - " + viewedUser.username,
         viewedUser: other,
         paginatedResults,
         currentPage,
@@ -288,12 +278,11 @@ router.get("/:id", async (req, res) => {
       });
     } else {
       res.render("protected", {
-        title: viewedUser.username,
+        title: "Render - " + viewedUser.username,
         viewedUser: other,
         alreadyRequested
       });
     }
-
   } catch (err) {
     res.status(500).json(err);
   }
@@ -372,7 +361,6 @@ router.post("/:id/follow", async (req, res) => {
       authed: false
     });
   }
-
 });
 
 
@@ -517,7 +505,7 @@ router.get("/:id/likes", async (req, res) => {
         const alreadySaved = paginatedResults.results.map(post => post.alreadySaved);
 
         res.render("likes_saves", {
-          title: "Render - Likes",
+          title: "Render - Liked Recipes",
           paginatedResults,
           currentPage,
           currentUser,
@@ -671,7 +659,7 @@ router.get("/:id/following", async (req, res) => {
         paginatedResults.results = accounts.slice(startIndex, endIndex);
 
         res.render("followers_following", {
-          title: viewedUser.username + "'s' Following",
+          title: "Render - " + viewedUser.username + "'s' Following",
           viewedUser,
           accounts,
           pageHeading,
@@ -734,7 +722,7 @@ router.get("/:id/followers", async (req, res) => {
         paginatedResults.results = accounts.slice(startIndex, endIndex);
 
         res.render("followers_following", {
-          title: viewedUser.username + "'s' Followers",
+          title: "Render - " + viewedUser.username + "'s' Followers",
           viewedUser,
           accounts,
           pageHeading,

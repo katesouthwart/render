@@ -97,11 +97,29 @@ passport.use(new GoogleStrategy({
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: "http://localhost:3000/auth/google/timeline/all"
 },
-function(accessToken, refreshToken, profile, cb) {
-  User.findOrCreate({username: profile.displayName, googleId: profile.id},
-  function(err, user){
-    return cb(err, user);
-  });
+async function(accessToken, refreshToken, profile, cb) {
+
+  try {
+
+    const existingUser = await User.findOne({ googleId: profile.id });
+
+    if (existingUser) {
+      return cb(null, existingUser);
+    }
+
+    const newUser = new User({
+      displayName: profile.displayName,
+      googleId: profile.id,
+      email: profile._json.email,
+    });
+
+    newUser.username = "user" + newUser._id;
+
+    await newUser.save();
+    return cb(null, newUser);
+  } catch (err) {
+    return cb(err, null);
+  }
 }));
 
 //Check isAuthenticated

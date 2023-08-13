@@ -179,6 +179,42 @@
         </div>
       </div>
     </div>
+
+
+    <div class="modal fade" id="change-password-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+          <div class="modal-header justify-content-center">
+            <h5 class="modal-title fw-bold" id="modal-title">Update Password</h5>
+          </div>
+
+          <form method="post">
+
+            <div class="modal-body">
+
+              <label for="oldPassword" class="form-label">Current Password</label>
+              <input type="password" class="form-control" name="oldPassword" id="oldPassword" required>
+
+              <label for="newPasswordOne" class="form-label pt-2">New Password</label>
+              <input type="password" class="form-control" name="newPasswordOne" min="6" id="newPasswordOne" required>
+
+              <label for="newPasswordTwo" class="form-label pt-2">Confirm New Password</label>
+              <input type="password" class="form-control" name="newPasswordTwo" min="6" id="newPasswordTwo" required>
+
+            </div>
+
+            <div class="modal-footer justify-content-center d-flex">
+              <a class="btn btn-primary col-12" onclick="userChangePassword('<%= user.id %>')">Update Password</a>
+              <button class="btn btn-outline-dark col-12" type="button" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+            </div>
+
+
+          </form>
+
+        </div>
+      </div>
+    </div>
 <% } %>
 
 

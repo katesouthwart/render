@@ -16,19 +16,13 @@ router.get("/create", async (req, res) => {
       infoErrorsObj,
       categories
     });
-
-
   } catch (err) {
     res.status(500).json(err);
   }
-
-
 });
 
 router.post("/create", async (req, res) => {
-
   try {
-
     //Image upload
     let imageUploadFile;
     let uploadPath;
@@ -103,17 +97,14 @@ router.post("/create", async (req, res) => {
   } catch (err) {
     req.flash("infoErrors", err);
   }
-
 });
 
 //Update a post
 router.post("/:id/edit", async (req, res) => {
-  //test functionality
   try {
     const post = await Post.findById(req.params.id);
 
     if (post.author.toString() === req.user.id || req.user.isAdmin) {
-
       //Time
       let prepMins = req.body.prepMins || 0;
         prepMins = prepMins.toString().padStart(2, '0');
@@ -185,7 +176,6 @@ router.get("/:id/edit", async (req, res) => {
 
 //Delete a post
 router.delete("/:id/delete", async (req, res) => {
-  //test functionality once frontend done
   try {
     const post = await Post.findById(req.params.id);
 
@@ -217,7 +207,6 @@ router.delete("/:id/delete", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-
 });
 
 //Like / unlike a post
@@ -246,7 +235,6 @@ router.put("/:id/like", async (req, res) => {
 
         post.likes = post.likes.filter((like) => !like.user.equals(userId));
         await post.save();
-
 
         res.status(200).json({ message: "The post has been un-liked.", likes: post.likes.length, alreadyLiked: false });
       }
@@ -288,7 +276,6 @@ router.put("/:id/save", async (req, res) => {
 
         post.saves = post.saves.filter((save) => !save.user.equals(userId));
         await post.save();
-
 
         res.status(200).json({ message: "The post has been un-saved.", saves: post.saves.length, alreadySaved: false });
       }
@@ -337,10 +324,8 @@ router.post("/:id/rate", async (req, res) => {
   }
 });
 
-
 //Get a post
 router.get("/:id", async (req, res) => {
-
   try {
     let post = await Post.findById(req.params.id).populate("author");
     const author = post.author;
@@ -370,8 +355,6 @@ router.get("/:id", async (req, res) => {
       averageOneDecimal = averageRating.toFixed(1);
     }
 
-
-
     if (req.user) {
       currentUser = await User.findById(req.user.id);
       const currentUserReview = await Post.findOne({ _id: postId, 'reviews.user': currentUser._id });
@@ -390,12 +373,11 @@ router.get("/:id", async (req, res) => {
       if (post.saves && Array.isArray(post.saves)) {
         post.alreadySaved = post.saves.some(save => save.user.toString() === currentUser.id);
       }
-
     }
 
     if (!author.isPrivate || (req.user && req.user.id === author.id) || (author.followers.includes(currentUser.id)) ) {
       res.render("post", {
-        title: "Render - Recipe",
+        title: "Render - " + post.title,
         post,
         author,
         currentUser,
@@ -409,7 +391,6 @@ router.get("/:id", async (req, res) => {
     } else {
         res.redirect("/users/" + author.id);
       }
-
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -418,7 +399,6 @@ router.get("/:id", async (req, res) => {
 
 //Get all following / timeline postSchema
 router.get("/timeline/all", async (req, res) => {
-
   try {
     const currentUser = await User.findById(req.user.id);
     const currentUserPosts = await Post.find({ author: currentUser.id }).populate("author");
@@ -454,7 +434,6 @@ router.get("/timeline/all", async (req, res) => {
     paginatedResults.results.forEach(post => {
       post.alreadyLiked = likedPostIds.includes(post._id.toString());
     });
-
 
     const alreadyLiked = paginatedResults.results.map(post => post.alreadyLiked);
 

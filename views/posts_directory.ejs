@@ -1,29 +1,29 @@
 <div class="container">
-  <h1 class="pb-4 mt-4 mb-2">Explore <%= category.name %> Recipes</h1>
+  <h1 class="pb-4 mt-4 mb-2 heading-white-bg"><%= pageHeading %></h1>
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb mt-3">
       <li class="breadcrumb-item"><a href="/explore">Explore</a></li>
-      <li class="breadcrumb-item active" aria-current="page"><%= category.name %> Recipes</li>
+      <li class="breadcrumb-item active" aria-current="page"><%= activeBreadcrumb %></li>
     </ol>
   </nav>
 
   <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-2 g-lg-3 mb-4 py-4">
 
-    <% if(posts != "") {%>
+    <% if (posts != "") { %>
       <% posts.forEach(function(post, index) { %>
 
         <a href="/posts/<%= post.id %>" class="col text-center category-link recipe-title-directory">
           <div class="explore-img latest-img">
-            <img src="/uploads/<%= post.img %>" alt="<%- post.title %>" onerror="this.onerror=null; this.src='/uploads/flame header.png';" loading="lazy">
+            <img src="/uploads/<%= post.img %>" onerror="this.onerror=null; this.src='/uploads/flame header.png';" alt="<%- post.title %>" loading="lazy">
           </div>
           <div class="pt-1"><%= post.title %></div>
         </a>
 
-      <%  }) %>
-      <% } else { %>
-        <p>No Items Found.</p>
-      <% } %>
+      <% }) %>
+    <% } else { %>
+      <p>No Items Found.</p>
+    <% } %>
 
   </div>
 

@@ -60,7 +60,7 @@
           </div>
 
           <div class="col-12 pb-3 d-flex">
-            <a href="/users/<%= author._id %>" class="col-6 d-flex justify-content-start text-dark"><i class="fa-solid fa-user me-2 mb-3 profile-icon-color"></i><%= author.username %></a>
+            <a href="/users/<%= author._id %>" class="col-6 d-flex justify-content-start text-dark"><i class="fa-solid fa-user me-2 mb-3 profile-icon-color"></i><%= author.displayName %> <span class="text-secondary fw-light fst-italic ps-2 ">@<%= author.username %></span></a>
             <p class="col-6 d-flex justify-content-end text-secondary"><%= post.formattedCreatedAt %></p>
           </div>
 
@@ -235,7 +235,7 @@
 
             <div class="col-8 col-md-9">
               <div class="d-flex justify-content-between">
-                <a href="/users/<%= comment.author._id %>" class="form-label"><%= comment.author.username %></a>
+                <a href="/users/<%= comment.author._id %>" class="form-label"><%= comment.author.displayName %><span class="text-secondary fw-light fst-italic ps-2 ">@<%= author.username %></span></a>
                 <p class="text-secondary timestamp-text ps-4 mb-0"><%= comment.formattedCreatedAt %></p>
               </div>
               <p><%= comment.text %></p>
@@ -315,7 +315,7 @@
 
             <div class="col-8 col-md-9">
               <div class="d-flex justify-content-between">
-                <a href="/users/<%= comment.author._id %>" class="form-label"><%= comment.author.username %></a>
+                <a href="/users/<%= comment.author._id %>" class="form-label"><%= comment.author.displayName %><span class="text-secondary fw-light fst-italic ps-2 ">@<%= author.username %></span></a>
                 <p class="text-secondary timestamp-text ps-4 mb-0"><%= comment.formattedCreatedAt %></p>
               </div>
 
