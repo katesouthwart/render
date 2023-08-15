@@ -59,9 +59,15 @@
 
           </div>
 
-          <div class="col-12 pb-3 d-flex">
-            <a href="/users/<%= author._id %>" class="col-6 d-flex justify-content-start text-dark"><i class="fa-solid fa-user me-2 mb-3 profile-icon-color"></i><%= author.displayName %> <span class="text-secondary fw-light fst-italic ps-2 ">@<%= author.username %></span></a>
-            <p class="col-6 d-flex justify-content-end text-secondary"><%= post.formattedCreatedAt %></p>
+          <div class="col-12 pb-3 d-flex align-items-center">
+
+            <div class="col-8 d-flex justify-content-start">
+              <a href="/users/<%= author.username %>" class=" text-dark"><i class="fa-solid fa-user me-2 mb-3 profile-icon-color"></i><%= author.displayName %> <span class="text-secondary fw-light fst-italic ps-2 ">@<%= author.username %></span></a>
+              <% if (post.author.isPrivate === true) { %>
+              <i class="fa-solid fa-sm fa-lock text-secondary ps-2 mt-2 pt-1"></i>
+              <% } %>
+            </div>
+            <p class="col-4 d-flex justify-content-end text-secondary mt-2 mt-lg-2"><%= post.formattedCreatedAt %></p>
           </div>
 
           <div class="col-12 pb-2 d-flex justify-content-between">
@@ -223,7 +229,7 @@
 
             <div class="col-3 col-md-2">
               <div class="d-flex justify-content-center">
-                <a href="/users/<%= comment.author._id %>" class="form-label">
+                <a href="/users/<%= comment.author.username %>" class="form-label">
                   <img class="comment-profile-pic" src="/uploads/<%= comment.author.profilePicture %>" onerror="this.onerror=null; this.src='/uploads/flame.PNG';" alt="">
                 </a>
               </div>
@@ -235,7 +241,7 @@
 
             <div class="col-8 col-md-9">
               <div class="d-flex justify-content-between">
-                <a href="/users/<%= comment.author._id %>" class="form-label"><%= comment.author.displayName %><span class="text-secondary fw-light fst-italic ps-2 ">@<%= author.username %></span></a>
+                <a href="/users/<%= comment.author.username %>" class="form-label"><%= comment.author.displayName %><span class="text-secondary fw-light fst-italic ps-2 ">@<%= author.username %></span></a>
                 <p class="text-secondary timestamp-text ps-4 mb-0"><%= comment.formattedCreatedAt %></p>
               </div>
               <p><%= comment.text %></p>
@@ -304,7 +310,7 @@
 
             <div class="col-3 col-md-2">
               <div class="d-flex justify-content-center">
-                <a href="/users/<%= comment.author._id %>" class="form-label">
+                <a href="/users/<%= comment.author.username %>" class="form-label">
                   <img class="comment-profile-pic" src="/uploads/<%= comment.author.profilePicture %>" onerror="this.onerror=null; this.src='/uploads/flame.PNG';" alt="">
                 </a>
               </div>
@@ -315,7 +321,7 @@
 
             <div class="col-8 col-md-9">
               <div class="d-flex justify-content-between">
-                <a href="/users/<%= comment.author._id %>" class="form-label"><%= comment.author.displayName %><span class="text-secondary fw-light fst-italic ps-2 ">@<%= author.username %></span></a>
+                <a href="/users/<%= comment.author.username %>" class="form-label"><%= comment.author.displayName %><span class="text-secondary fw-light fst-italic ps-2 ">@<%= author.username %></span></a>
                 <p class="text-secondary timestamp-text ps-4 mb-0"><%= comment.formattedCreatedAt %></p>
               </div>
 

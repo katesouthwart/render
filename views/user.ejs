@@ -14,8 +14,8 @@
         </div>
 
         <div class="col-4 d-flex justify-content-end pt-4 pe-5">
-          <form id="followForm" action="/users/<%= viewedUser._id %>/follow" method="post">
-            <button id="followButton" class="follow-button btn btn-lg <%= viewedUser.alreadyFollowed ? 'btn-outline-primary followed' : (viewedUser.alreadyRequested ? 'btn-outline-primary requested' : 'btn-primary') %>" data-user-id="<%= viewedUser._id %>" data-already-followed="<%= viewedUser.alreadyFollowed %>" data-already-requested="<%= viewedUser.alreadyRequested %>" type="submit" name="followBtn">
+          <form id="followForm-<%=viewedUser._id%>" action="/users/<%= viewedUser._id %>/follow" data-user-id="<%= viewedUser._id %>" method="post" class="follow-form">
+            <button id="followButton<%= viewedUser._id %>" class="follow-button btn btn-lg <%= viewedUser.alreadyFollowed ? 'btn-outline-primary followed' : (viewedUser.alreadyRequested ? 'btn-outline-primary requested' : 'btn-primary') %>" data-user-id="<%= viewedUser._id %>" data-already-followed="<%= viewedUser.alreadyFollowed %>" data-already-requested="<%= viewedUser.alreadyRequested %>" type="submit" name="followBtn">
               <%= viewedUser.alreadyFollowed ? 'Following' : (viewedUser.alreadyRequested ? 'Requested' : 'Follow') %>
             </button>
           </form>
@@ -25,16 +25,23 @@
 
       <div class="ps-5 profile-info">
         <div class="">
-          <h1 class="col-12 mb-0"><%= viewedUser.displayName %> </h1>
+          <div class="ccol-12 d-flex flex-wrap align-items-center h-100">
+            <h1 class="mb-0 pe-3"><%= viewedUser.displayName %> </h1>
+            <% if (viewedUser.isPrivate === true) { %>
+            <i class="fa-solid fa-lg fa-lock"></i>
+            <% } %>
+          </div>
+
+
           <p class="text-secondary fw-light fst-italic mb-2">@<%= viewedUser.username %></p>
           <p class="col-12 mb-2 text-break"> <%= viewedUser.desc %> </p>
           <p class="text-secondary">Joined <%= viewedUser.formattedJoinedAt %></p>
         </div>
         <div class="d-flex">
-          <a href="/users/<%= viewedUser._id %>/following" class="pe-4 d-flex">
+          <a href="/users/<%= viewedUser.username %>/following" class="pe-4 d-flex">
             <p class="profile-followers"><span class="fw-bold"><%= viewedUser.following.length %></span> Following</p>
           </a>
-          <a href="/users/<%= viewedUser._id %>/followers" class="d-flex">
+          <a href="/users/<%= viewedUser.username %>/followers" class="d-flex">
             <p class="profile-followers"><span class="fw-bold"><%= viewedUser.followers.length %></span> Followers</p>
           </a>
         </div>
@@ -43,7 +50,7 @@
 
       <div class="row py-4" id="posts-container">
 
-        <% if(paginatedResults.length != "") { %>
+        <% if(paginatedResults.results.length > 0) { %>
         <% paginatedResults.results.forEach(function(post, index) { %>
 
         <div class="py-3 col-11 mx-auto border-top border-light-subtle profile-post">

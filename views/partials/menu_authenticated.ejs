@@ -32,14 +32,15 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
 
-              <li><a class="dropdown-item" href="/users/<%= user.id %>">Profile</a></li>
+              <li><a class="dropdown-item" href="/users/<%= user.username %>">Profile</a></li>
 
             <% if (user.isPrivate){ %>
-              <li><a class="dropdown-item" href="/users/<%= user.id %>/requests">Requests</a></li>
+              <li><a class="dropdown-item" href="/users/<%= user.id %>/requests">Follower Requests</a></li>
             <% } %>
 
               <li><a class="dropdown-item" href="/users/<%= user.id %>/likes">Likes</a></li>
-              <li><a class="dropdown-item" href="/users/<%= user.id %>/settings">Settings</a></li>
+              <li><a class="dropdown-item" href="/users/<%= user.id %>/settings">Profile Settings</a></li>
+              <li><a class="dropdown-item" href="/discover/<%= user.id %>/settings">Discover Settings</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="/auth/logout">Log out</a></li>
             </ul>

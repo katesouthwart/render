@@ -229,16 +229,18 @@ document.addEventListener('DOMContentLoaded', function() {
 $(document).ready(function() {
   console.log("Document ready");
 
-  const followForm = $("#followForm");
+  const followForm = $(".follow-form");
   console.log(followForm);
 
   followForm.on("submit", function(event) {
     event.preventDefault();
-
-    const followButton = $("#followButton");
-    const userId = followButton.data("user-id");
+    //const followButton = $("#followButton");
+    const userId = $(this).data('user-id');
+    const followButton = $("#followButton"+userId);
     const alreadyFollowed = followButton.data("already-followed");
     const alreadyRequested = followButton.data("already-requested");
+
+    console.log(followButton);
 
     $.ajax({
       url: `/users/${userId}/follow?_=${Date.now()}`,
@@ -272,7 +274,7 @@ function deleteUser(userId) {
 
       const homeUrl = '/';
 
-      if(res.success = true) {
+      if(res.success == true) {
         window.location.href = homeUrl;
       } else {
         alert('Could not delete user, please try again.');
@@ -345,7 +347,7 @@ function userChangePassword(userId) {
   });
 }
 
-// user change Username
+// check Username
 function userChangeUsername() {
   console.log('sending');
   const username = $('#username').val();
@@ -360,18 +362,54 @@ function userChangeUsername() {
       console.log(res);
       if(res.success == true) {
         $('#username-change-failure').removeClass('d-inline').addClass('d-none');
+        $('#username-change-failure-message').removeClass('d-inline').addClass('d-none');
         $('#username-change-success').removeClass('d-none').addClass('d-inline');
         $('#saveUserButton').removeClass('btn-outline-disabled').addClass('btn-primary').prop("disabled", false);
         $('#registerButton').removeClass('btn-outline-disabled').addClass('btn-primary').prop("disabled", false);
       } else {
+
         $('#username-change-success').removeClass('d-inline').addClass('d-none');
         $('#username-change-failure').removeClass('d-none').addClass('d-inline');
+        $('#username-change-failure-message').removeClass('d-none').addClass('d-inline').text(res.message);
         $('#saveUserButton').removeClass('btn-primary').addClass('btn-outline-disabled').prop("disabled", true);
         $('#registerButton').removeClass('btn-primary').addClass('btn-outline-disabled').prop("disabled", true);
       }
     },
     error: function(err) {
       console.log("Error updating username:", err);
+    }
+  });
+}
+
+// check email
+function userCheckEmail() {
+  console.log('sending');
+  const email = $('#email').val();
+
+  $.ajax({
+    url: `/auth/checkemail`,
+    method: "POST",
+    data: {
+      email: email,
+    },
+    success: function(res) {
+      console.log(res);
+      if(res.success == true) {
+        $('#email-failure').removeClass('d-inline').addClass('d-none');
+        $('#email-failure-message').removeClass('d-inline').addClass('d-none');
+        $('#email-success').removeClass('d-none').addClass('d-inline');
+        $('#saveUserButton').removeClass('btn-outline-disabled').addClass('btn-primary').prop("disabled", false);
+        $('#registerButton').removeClass('btn-outline-disabled').addClass('btn-primary').prop("disabled", false);
+      } else {
+        $('#email-success').removeClass('d-inline').addClass('d-none');
+        $('#email-failure').removeClass('d-none').addClass('d-inline');
+        $('#email-failure-message').removeClass('d-none').addClass('d-inline');
+        $('#saveUserButton').removeClass('btn-primary').addClass('btn-outline-disabled').prop("disabled", true);
+        $('#registerButton').removeClass('btn-primary').addClass('btn-outline-disabled').prop("disabled", true);
+      }
+    },
+    error: function(err) {
+      console.log("Error updating email:", err);
     }
   });
 }

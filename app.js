@@ -13,6 +13,7 @@ const postsRoute = require("./routes/posts");
 const exploreRoute = require("./routes/explore");
 const categoryRoute = require("./routes/categories");
 const commentsRoute = require("./routes/comments");
+const discoverRoute = require("./routes/discover");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
@@ -54,7 +55,7 @@ app.use(
       scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'kit.fontawesome.com', 'https://code.jquery.com/jquery-3.7.0.min.js'],
       styleSrc: ["'self'", "'unsafe-inline'", 'https://stackpath.bootstrapcdn.com', 'https://cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'use.fontawesome.com'],
       fontSrc: ["'self'", 'https://stackpath.bootstrapcdn.com', 'https://cdnjs.cloudflare.com', 'use.fontawesome.com', 'ka-f.fontawesome.com'],
-      imgSrc: ["'self'", 'data:'],
+      imgSrc: ["'self'", 'data:', 'blob:'],
       objectSrc: ["'none'"],
       mediaSrc: ["'none'"],
       frameSrc: ["'none'"],
@@ -136,15 +137,19 @@ app.use("/posts", postsRoute);
 app.use("/categories", categoryRoute);
 app.use("/explore", exploreRoute);
 app.use("/comments", commentsRoute);
+app.use("/discover", discoverRoute);
 
 app.get("/", (req, res) => {
-
   if (req.user) {
     res.redirect("/posts/timeline/all");
   } else {
     res.render("home");
   }
 });
+// 
+// app.get("/contact", (req, res) => {
+//   res.render("contact");
+// });
 
 
 app.listen(port, () => {

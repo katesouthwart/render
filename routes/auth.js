@@ -16,7 +16,7 @@ router.get("/register", (req, res) => {
 router.post("/register", async (req, res) => {
   try {
 
-    const newUser = await User.register({username: req.body.username, usernameLower: _.lowerCase(req.body.username) ,  email: req.body.email, displayName: req.body.username}, req.body.password );
+    const newUser = await User.register({username: req.body.username, usernameLower: _.toLower(req.body.username) ,  email: req.body.email, displayName: req.body.username}, req.body.password );
 
     if(newUser){
       passport.authenticate("local")(req, res, function(){
@@ -125,24 +125,34 @@ router.post('/:id/changepassword', async function(req, res) {
 //update username
 router.post("/checkusername", async (req, res) => {
   try {
-    let requestedUsername = _.lowerCase(req.body.username);
+    let requestedUsername = _.toLower(req.body.username);
     let takenUsername = await User.findOne({usernameLower: requestedUsername})
 
-    if (req.user && req.user.id.toString() == takenUsername.id.toString()) {
-      return res.json({success: true, message: "Current Username."});
+    function isAlphanumeric(requestedUsername) {
+      return requestedUsername.match(/^[a-zA-Z0-9]+$/) !== null;
     }
+    usernameAlphanumeric = isAlphanumeric(requestedUsername);
 
-    if (requestedUsername.length >= 3) {
-      if (!takenUsername) {
-        return res.json({success: true, message: "Username available."});
+    if (usernameAlphanumeric == true) {
+      if (takenUsername && req.user && req.user.id.toString() == takenUsername.id.toString()) {
+        return res.json({success: true, message: "Current Username."});
+      }
+
+      if (requestedUsername.length >= 3) {
+        if (!takenUsername) {
+          return res.json({success: true, message: "Username available."});
+        } else {
+          return res.json({success: false, message: "Username taken."});
+        }
       } else {
-        return res.json({success: false, message: "Username taken."});
+        return res.json({success: false, message: "Username must be 3-27 characters."});
       }
     } else {
-      return res.json({success: false, message: "Username must be 3 characters or more."});
+      return res.json({success: false, message: "Username must be alphanumeric."});
     }
 
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -161,5 +171,27 @@ router.post("/checkpassword", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+//update email
+router.post("/checkemail", async (req, res) => {
+  try {
+    let requestedEmail = _.toLower(req.body.email);
+    let takenEmail = await User.findOne({email: requestedEmail})
+
+      if (takenEmail && req.user && req.user.id.toString() == takenEmail.id.toString()) {
+        return res.json({success: true, message: "Current Email."});
+      }
+
+      if (!takenEmail) {
+        return res.json({success: true, message: "Email available."});
+      } else {
+        return res.json({success: false, message: "Email already in use."});
+      }
+
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 
 module.exports = router

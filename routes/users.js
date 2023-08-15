@@ -4,6 +4,7 @@ const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
+const Discover = require("../models/Discover");
 const { formatTimestamp } = require('../public/js/helpers');
 const { formatJoinedDate } = require('../public/js/helpers');
 const fs = require("fs");
@@ -51,7 +52,7 @@ router.post("/:id/settings", async (req, res) => {
     try {
       const currentUser = await User.findByIdAndUpdate(req.user.id, {
         $set: req.body,
-        usernameLower: _.lowerCase(req.body.username)
+        usernameLower: _.toLower(req.body.username)
       });
       return res.redirect("/users/" + req.user.id + "/settings");
     } catch (err) {
@@ -166,26 +167,30 @@ router.post("/:id/settings/profilepic", async (req, res) => {
 //delete user
 router.delete("/:id/delete", async (req, res) => {
   if (req.user && req.user.id === req.params.id || req.user.isAdmin) {
-
     try {
-      const currentUser = await User.findByIdAndDelete(req.user.id);
+      const currentUserId = req.user.id;
+      const deletePosts = await Post.deleteMany({ author: currentUserId });
+      const deleteComments = await Comment.deleteMany({ author: currentUserId });
+      const deleteDiscover = await Discover.deleteOne({ user: currentUserId });
+      const deleteUser = await User.findByIdAndDelete(currentUserId);
       res.status(200).json({
         success: true,
-        message: "Successfully deleted user."
+        message: "Successfully deleted user and user assets."
       });
     } catch (err) {
+      console.log(err);
       return res.status(500).json(err);
     }
-
   } else {
     return res.status(403).json("You can only delete your own account!");
   }
 });
 
 //get a user
-router.get("/:id", async (req, res) => {
+router.get("/:username", async (req, res) => {
   try{
-    const viewedUser = await User.findById(req.params.id);
+    // const viewedUser = await User.findById(req.params.id);
+    const viewedUser = await User.findOne({username: req.params.username});
     let currentUser = "";
     let alreadyLiked = [];
     let alreadySaved = [];
@@ -194,7 +199,7 @@ router.get("/:id", async (req, res) => {
 
     const {password, updatedAt, requestedTo, email, isAdmin, ...other} = viewedUser._doc
     const limitNumber = 20;
-    const posts = await Post.find({ author: req.params.id}).sort({ _id: -1}).limit(limitNumber);
+    const posts = await Post.find({ author: viewedUser.id }).sort({ _id: -1}).limit(limitNumber);
 
     for (const post of posts) {
       let comments = await Comment.find({ parentPost: post.id });
@@ -255,6 +260,7 @@ router.get("/:id", async (req, res) => {
     }
 
     other.formattedJoinedAt = formatJoinedDate(other.createdAt);
+    console.log(paginatedResults);
 
     if (currentUser && currentUser.id === viewedUser.id) {
       res.render("profile", {
@@ -345,7 +351,13 @@ router.post("/:id/follow", async (req, res) => {
           } else {
             await viewedUser.updateOne({ $pull: { followers: currentUser.id } });
             await currentUser.updateOne({ $pull: { following: viewedUser.id } });
-            res.status(200).json({ message: "The private user has been unfollowed."})
+            res.status(200).json({
+              success: true,
+              message: "The private user has been unfollowed.",
+              buttonText: "Follow",
+              classes: "btn-primary",
+              removeClasses: "btn-outline-primary"
+            })
           }
         }
         } catch (err) {
@@ -617,10 +629,10 @@ router.get("/:id/saved", async (req, res) => {
 });
 
 //View user following
-router.get("/:id/following", async (req, res) => {
+router.get("/:username/following", async (req, res) => {
   if (req.user) {
     const currentUser = req.user;
-    const viewedUser = await User.findById(req.params.id);
+    const viewedUser = await User.findOne({ username: req.params.username });
     const pageHeading = viewedUser.username + "'s Following";
     let accounts = [];
     let alreadyFollowed = false;
@@ -680,10 +692,10 @@ router.get("/:id/following", async (req, res) => {
 });
 
 //View user followers
-router.get("/:id/followers", async (req, res) => {
+router.get("/:username/followers", async (req, res) => {
   if (req.user) {
     const currentUser = req.user;
-    const viewedUser = await User.findById(req.params.id);
+    const viewedUser = await User.findOne({ username: req.params.username });
     const pageHeading = viewedUser.username + "'s Followers";
     let accounts = [];
     let alreadyFollowed = false;

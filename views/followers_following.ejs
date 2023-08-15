@@ -9,28 +9,28 @@
         <% if(paginatedResults.length != "") { %>
         <% paginatedResults.results.forEach(function(user){ %>
 
-          <div class="col-12 d-flex user-container flex-wrap border-top border-subtle pt-3 mb-3">
+          <div class="col-12 d-flex flex-wrap border-top border-subtle">
 
-            <div class="col-1">
-              <a href="/users/<%= user.id %>" class="form-label me-3">
+            <div class="col-1 pt-2">
+              <a href="/users/<%= user.username %>" class="form-label me-3">
                 <img class="directory-profile-pic" src="/uploads/<%= user.profilePicture %>" onerror="this.onerror=null; this.src='/uploads/flame.PNG';" alt="">
               </a>
             </div>
 
-            <div class="col-11 ps-3 d-flex justify-content-between flex-wrap">
-              <a href="/users/<%= user.id %>" class="form-label profile-followers"><h5><%= user.username %></h5></a>
+            <div class="col-11 ps-3 d-flex justify-content-between flex-wrap pt-2">
+              <a href="/users/<%= user.username %>" class="form-label profile-followers"><h5><%= user.username %></h5></a>
 
               <% if (currentUser._id.toString() != user._id.toString()) { %>
-                <div class="col-2 d-flex justify-content-end">
-                  <form id="followForm" action="/users/<%= user._id %>/follow" method="post">
-                    <button id="followButton" class="follow-button btn btn-lg <%= user.alreadyFollowed ? 'btn-outline-primary followed' : (user.alreadyRequested ? 'btn-outline-primary requested' : 'btn-primary') %>" data-user-id="<%= user._id %>" data-already-followed="<%= user.alreadyFollowed %>" data-already-requested="<%= user.alreadyRequested %>" type="submit" name="followBtn">
+                <div class="col-2 d-flex justify-content-end pt-1">
+                  <form id="followForm-<%=user._id%>" action="/users/<%= user._id %>/follow" data-user-id="<%= user._id %>" method="post" class="follow-form">
+                    <button id="followButton<%= user._id %>" class="follow-button btn btn-lg <%= user.alreadyFollowed ? 'btn-outline-primary followed' : (user.alreadyRequested ? 'btn-outline-primary requested' : 'btn-primary') %>" data-user-id="<%= user._id %>" data-already-followed="<%= user.alreadyFollowed %>" data-already-requested="<%= user.alreadyRequested %>" type="submit" name="followBtn">
                       <%= user.alreadyFollowed ? 'Following' : (user.alreadyRequested ? 'Requested' : 'Follow') %>
                     </button>
                   </form>
                 </div>
               <% } %>
 
-              <p class="text-break col-12 pt-2"> <%= user.desc %> </p>
+              <p class="text-break col-12 mb-0 py-2"> <%= user.desc %> </p>
             </div>
 
           </div>

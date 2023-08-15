@@ -22,16 +22,22 @@
 
       <div class="ps-5 profile-info">
         <div class="">
-          <h1 class="col-12 mb-0"><%= profile.displayName %> </h1>
+          <div class="col-12 d-flex flex-wrap align-items-center h-100">
+            <h1 class=" mb-0 pe-3"><%= profile.displayName %> </h1>
+            <i class="fa-solid fa-lg fa-lock"></i>
+          </div>
+
+
+
           <p class="text-secondary fw-light fst-italic mb-2">@<%= profile.username %></p>
           <p class="col-12 mb-2 text-break"><%= profile.desc %> </p>
           <p class="text-secondary">Joined <%= profile.formattedJoinedAt %></p>
         </div>
         <div class="d-flex">
-          <a href="/users/<%= profile._id %>/following" class="pe-4 d-flex">
+          <a href="/users/<%= profile.username %>/following" class="pe-4 d-flex">
             <p class="profile-followers"><span class="fw-bold"><%= profile.following.length %></span> Following</p>
           </a>
-          <a href="/users/<%= profile._id %>/followers" class="d-flex">
+          <a href="/users/<%= profile.username %>/followers" class="d-flex">
             <p class="profile-followers"><span class="fw-bold"><%= profile.followers.length %></span> Followers</p>
           </a>
         </div>
@@ -40,7 +46,7 @@
 
       <div class="row py-4" id="posts-container">
 
-        <% if(paginatedResults.length != "") { %>
+        <% if(paginatedResults.results.length > 0) { %>
         <% paginatedResults.results.forEach(function(post, index) { %>
 
         <div class="py-3 col-11 mx-auto  border-top border-light-subtle profile-post">

@@ -1,0 +1,50 @@
+<div class="container">
+  <div class="row col-12 col-lg-10 mx-auto mb-5">
+    <div class="d-flex justify-content-between col-12 mt-4 align-items-center">
+      <h1 class="pb-0 mb-2 heading-white-bg">Discover</h1>
+        <% if (!currentUserDiscovered) { %>
+        <a href="/discover/<%=currentUser.id%>/settings" class="btn btn-primary px-4 py-2">Get Discovered</a>
+        <% } %>
+    </div>
+
+
+    <div class="tinder">
+      <div class="tinder--status">
+        <i class="fa fa-remove swipe-reject"></i>
+        <i class="fa fa-heart swipe-follow"></i>
+      </div>
+
+
+      <% if (discoverableUsers.length > 0) { %>
+      <div class="tinder--cards">
+
+        <% discoverableUsers.forEach(function(discoverableUser) { %>
+
+          <% if(discoverableUser.user._id != currentUser.id && !currentUser.following.includes(discoverableUser.user._id) && !currentUser.rejected.includes(discoverableUser.user._id) && !discoverableUser.discover.img1 == '') { %>
+            <div class="tinder--card" data-user-id="<%= discoverableUser.user._id %>">
+              <img src="/uploads/flame.PNG">
+              <h3><%= discoverableUser.user.displayName %></h3>
+              <p><%= discoverableUser.discover.desc %></p>
+            </div>
+          <% } else { %>
+            <% console.log("Skipped user, id: " + discoverableUser.user._id); %>
+          <% } %>
+
+      <% }); %>
+      </div>
+
+
+      <div class="tinder--buttons">
+        <button id="nope"><i class="fa fa-remove swipe-reject"></i></button>
+        <button id="love"><i class="fa fa-heart swipe-like"></i></button>
+      </div>
+
+      <% } else { %>
+        <p class="py-5 text-center">No users to discover at this time, check back later!</p>
+      <% } %>
+    </div>
+
+
+
+  </div>
+</div>

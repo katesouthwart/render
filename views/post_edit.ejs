@@ -93,7 +93,7 @@
               <label class="input-group-text" for="prepHours">Hours</label>
             </div>
             <div class="d-flex align-items-center form-group input-group ms-3">
-              <input type="number" name="prepMins" min="0" step="1" onblur="this.value = Math.round(this.value);" class="form-control" value="<%= post.prepMins %>">
+              <input type="number" name="prepMins" min="0" max="59" step="1" onblur="this.value = Math.round(this.value);" class="form-control" value="<%= post.prepMins %>">
               <label class="input-group-text" for="prepMins">Minutes</label>
             </div>
           </div>
@@ -108,7 +108,7 @@
               <label class="input-group-text" for="cookHours">Hours</label>
             </div>
             <div class="align-items-center form-group input-group ms-3">
-              <input type="number" name="cookMins" min="0" step="1" onblur="this.value = Math.round(this.value);" class="form-control" value="<%= post.cookMins %>">
+              <input type="number" name="cookMins" min="0" max="59" step="1" onblur="this.value = Math.round(this.value);" class="form-control" value="<%= post.cookMins %>">
               <label class="input-group-text" for="cookMins">Minutes</label>
             </div>
           </div>

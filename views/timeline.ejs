@@ -38,14 +38,12 @@
 
             <div class="flex-wrap col-12 col-md-10 d-flex justify-content-between ps-md-3">
               <div class="d-flex col-12 align-items-start flex-wrap">
-                <div class="d-flex col-12 my-3 my-md-0">
+                <div class="d-flex flex-wrap col-12 my-3 my-md-0">
 
                   <div class="d-flex col-11 justify-content-between flex-wrap">
                     <h4 class="mb-0 col-12 col-md-9"><a href="/posts/<%= post.id %>" class="profile-title"><%= post.title %></a></h4>
                     <p class="mb-0 col-12 col-md-3 d-flex justify-content-start justify-content-md-end text-secondary"><%= post.formattedCreatedAt %></p>
-                    <div class="col-12 d-flex align-items-center">
-                      <a href="/users/<%= post.author._id %>" class="mb-0 col-12 col-md-12 d-flex justify-content-start justify-content-md-start text-dark align-items-start"><i class="fa-solid fa-user me-2 profile-icon-color pt-1"></i><%= post.author.displayName %><span class="text-secondary fw-light fst-italic ps-2 ">@<%= post.author.username %></span></a>
-                    </div>
+
                   </div>
 
 
@@ -76,6 +74,12 @@
                             </div>
                           </div>
                         </div>
+                  </div>
+                  <div class="col-12 col-md-12 d-flex align-items-center justify-content-start">
+                    <a href="/users/<%= post.author.username %>" class="mb-0 d-flex justify-content-start justify-content-md-start text-dark align-items-start"><i class="fa-solid fa-user me-2 profile-icon-color pt-1"></i><%= post.author.displayName %><span class="text-secondary fw-light fst-italic ps-2 ">@<%= post.author.username %></span></a>
+                    <% if (post.author.isPrivate === true) { %>
+                    <i class="fa-solid fa-sm fa-lock text-secondary ps-2"></i>
+                    <% } %>
                   </div>
                 </div>
 
@@ -136,13 +140,17 @@
               <div class="flex-wrap col-12 col-md-10 d-flex justify-content-between ps-md-3">
 
                 <div class="d-flex col-12 align-items-start flex-wrap">
-                  <div class="d-flex col-12 my-3 my-md-0">
+                  <div class="d-flex flex-wrap col-12 my-3 my-md-0">
                     <div class="d-flex col-11 justify-content-between flex-wrap">
                       <h4 class="mb-0 col-12 col-md-9"><a href="/posts/<%= post.id %>" class="profile-title"><%= post.title %></a></h4>
                       <p class="mb-0 col-12 col-md-3 d-flex justify-content-start justify-content-md-end text-secondary"><%= post.formattedCreatedAt %></p>
-                      <div class="col-12 d-flex align-items-center">
-                        <a href="/users/<%= post.author._id %>" class="mb-0 col-12 col-md-12 d-flex justify-content-start justify-content-md-start text-dark align-items-start"><i class="fa-solid fa-user me-2 profile-icon-color pt-1"></i><%= post.author.displayName %><span class="text-secondary fw-light fst-italic ps-2 ">@<%= post.author.username %></span></a>
-                      </div>
+
+                    </div>
+                    <div class="col-12 col-md-12 d-flex align-items-center justify-content-start">
+                      <a href="/users/<%= post.author.username %>" class="mb-0 d-flex justify-content-start justify-content-md-start text-dark align-items-start"><i class="fa-solid fa-user me-2 profile-icon-color pt-1"></i><%= post.author.displayName %><span class="text-secondary fw-light fst-italic ps-2 ">@<%= post.author.username %></span></a>
+                      <% if (post.author.isPrivate === true) { %>
+                      <i class="fa-solid fa-sm fa-lock text-secondary ps-2"></i>
+                      <% } %>
                     </div>
                   </div>
 

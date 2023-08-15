@@ -29,12 +29,12 @@
 
         <div class="col-12">
           <label for="title" class="form-label">Title</label>
-          <input type="text" class="form-control" name="title" id="title" max="40" required>
+          <input type="text" class="form-control" name="title" id="title" maxlength="40" required>
         </div>
 
         <div class="col-12">
           <label for="desc" class="form-label">Description</label>
-          <textarea name="desc" class="form-control" rows="4" cols="30" max="200" id="desc" required></textarea>
+          <textarea name="desc" class="form-control" rows="4" cols="30" maxlength="200" id="desc" required></textarea>
         </div>
 
         <div class="col-12">
@@ -89,7 +89,7 @@
               <label class="input-group-text" for="prepHours">Hours</label>
             </div>
             <div class="d-flex align-items-center form-group input-group ms-3">
-              <input type="number" name="prepMins" min="0" step="1" onblur="this.value = Math.round(this.value);" class="form-control">
+              <input type="number" name="prepMins" min="0" max="59" step="1" onblur="this.value = Math.round(this.value);" class="form-control">
               <label class="input-group-text" for="prepMins">Minutes</label>
             </div>
           </div>
@@ -104,7 +104,7 @@
               <label class="input-group-text" for="cookHours">Hours</label>
             </div>
             <div class="align-items-center form-group input-group ms-3">
-              <input type="number" name="cookMins" min="0" step="1" onblur="this.value = Math.round(this.value);" class="form-control">
+              <input type="number" name="cookMins" min="0"  max="59" step="1" onblur="this.value = Math.round(this.value);" class="form-control">
               <label class="input-group-text" for="cookMins">Minutes</label>
             </div>
           </div>
