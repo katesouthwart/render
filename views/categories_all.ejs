@@ -1,5 +1,5 @@
-<div class="container">
-  <h1 class="pb-4 mt-4 mb-3 ms-5 heading-white-bg">Explore Categories</h1>
+<div class="container ">
+  <h3 class="pb-4 mt-5 pt-5 mb-3 ms-5 heading-white-bg fw-bold">Explore Categories</h3>
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb mt-3 ms-5">
@@ -13,11 +13,13 @@
     <% if(categories != "") {%>
     <% categories.forEach(function(category, index) { %>
 
-    <a href="/categories/<%= category.name %>" class="col text-center category-link">
+    <a href="/categories/<%= category.name %>" class="col text-center category-link mb-5">
       <div class="category-icon">
         <i class="<%= category.icon %> fa-4x features-icon"></i>
       </div>
-      <div class="pt-1 fw-bold mb-5"><%= category.name %></div>
+      <div>
+        <h6  class="pt-1 fw-bold"><%= category.name %></h6>
+      </div>
     </a>
 
     <%  }) %>

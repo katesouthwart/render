@@ -25,30 +25,32 @@
 
       <div class="ps-5 profile-info">
         <div class="">
-          <div class="ccol-12 d-flex flex-wrap align-items-center h-100">
-            <h1 class="mb-0 pe-3"><%= viewedUser.displayName %> </h1>
-            <% if (viewedUser.isPrivate === true) { %>
-            <i class="fa-solid fa-lg fa-lock"></i>
+          <div class="col-12 d-flex flex-wrap align-items-center h-100">
+            <h2 class="mb-0 pe-3"><%= viewedUser.displayName %> </h2>
+
+            <% if (viewedUser.isPrivate == true) { %>
+              <i class="fa-solid fa-lg fa-lock"></i>
             <% } %>
+
           </div>
 
 
-          <p class="text-secondary fw-light fst-italic mb-2">@<%= viewedUser.username %></p>
-          <p class="col-12 mb-2 text-break"> <%= viewedUser.desc %> </p>
-          <p class="text-secondary">Joined <%= viewedUser.formattedJoinedAt %></p>
+          <p class="text-secondary fw-light fst-italic mb-2 username-link">@<%= viewedUser.username %></p>
+          <p class="col-12 my-3 text-break"> <%= viewedUser.desc %> </p>
+          <p class="text-secondary joined-text mb-1">Joined <%= viewedUser.formattedJoinedAt %></p>
         </div>
         <div class="d-flex">
           <a href="/users/<%= viewedUser.username %>/following" class="pe-4 d-flex">
-            <p class="profile-followers"><span class="fw-bold"><%= viewedUser.following.length %></span> Following</p>
+            <p class="profile-followers"><span class="fw-normal"><%= viewedUser.following.length %></span> Following</p>
           </a>
           <a href="/users/<%= viewedUser.username %>/followers" class="d-flex">
-            <p class="profile-followers"><span class="fw-bold"><%= viewedUser.followers.length %></span> Followers</p>
+            <p class="profile-followers"><span class="fw-normal"><%= viewedUser.followers.length %></span> Followers</p>
           </a>
         </div>
       </div>
 
 
-      <div class="row py-4" id="posts-container">
+      <div class="row" id="posts-container">
 
         <% if(paginatedResults.results.length > 0) { %>
         <% paginatedResults.results.forEach(function(post, index) { %>
@@ -68,7 +70,7 @@
                 <div class="d-flex col-12 my-3 my-md-0">
                   <div class="d-flex col-12 justify-content-between flex-wrap">
                     <h4 class="mb-0 col-12 col-md-9"><a href="/posts/<%= post.id %>" class="profile-title"><%= post.title %></a></h4>
-                    <p class="mb-0 col-12 col-md-3 pt-2 pt-md-0 pe-md-3 d-flex justify-content-start justify-content-md-end text-secondary"><%= post.formattedCreatedAt %></p>
+                    <p class="mb-0 col-12 col-md-3 pt-2 pt-md-0 pe-md-3 d-flex justify-content-start justify-content-md-end text-secondary timestamp-text"><%= post.formattedCreatedAt %></p>
                   </div>
                 </div>
 

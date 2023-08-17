@@ -23,28 +23,30 @@
       <div class="ps-5 profile-info">
         <div class="">
           <div class="col-12 d-flex flex-wrap align-items-center h-100">
-            <h1 class=" mb-0 pe-3"><%= profile.displayName %> </h1>
-            <i class="fa-solid fa-lg fa-lock"></i>
+            <h2 class=" mb-0 pe-3"><%= profile.displayName %> </h2>
+            <% if (profile.isPrivate == true) { %>
+              <i class="fa-solid fa-lg fa-lock"></i>
+            <% } %>
           </div>
 
 
 
-          <p class="text-secondary fw-light fst-italic mb-2">@<%= profile.username %></p>
-          <p class="col-12 mb-2 text-break"><%= profile.desc %> </p>
-          <p class="text-secondary">Joined <%= profile.formattedJoinedAt %></p>
+          <p class="text-secondary fw-light fst-italic mb-2 username-link">@<%= profile.username %></p>
+          <p class="col-12 my-3 text-break"><%= profile.desc %> </p>
+          <p class="text-secondary joined-text mb-1">Joined <%= profile.formattedJoinedAt %></p>
         </div>
         <div class="d-flex">
           <a href="/users/<%= profile.username %>/following" class="pe-4 d-flex">
-            <p class="profile-followers"><span class="fw-bold"><%= profile.following.length %></span> Following</p>
+            <p class="profile-followers"><span class="fw-normal"><%= profile.following.length %></span> Following</p>
           </a>
           <a href="/users/<%= profile.username %>/followers" class="d-flex">
-            <p class="profile-followers"><span class="fw-bold"><%= profile.followers.length %></span> Followers</p>
+            <p class="profile-followers"><span class="fw-normal"><%= profile.followers.length %></span> Followers</p>
           </a>
         </div>
       </div>
 
 
-      <div class="row py-4" id="posts-container">
+      <div class="row" id="posts-container">
 
         <% if(paginatedResults.results.length > 0) { %>
         <% paginatedResults.results.forEach(function(post, index) { %>
@@ -66,7 +68,7 @@
 
                   <div class="d-flex col-11 justify-content-between flex-wrap">
                     <h4 class="mb-0 col-12 col-md-9"><a href="/posts/<%= post.id %>" class="profile-title"><%= post.title %></a></h4>
-                    <p class="mb-0 col-12 col-md-3 d-flex justify-content-start justify-content-md-end text-secondary"><%= post.formattedCreatedAt %></p>
+                    <p class="mb-0 col-12 col-md-3 d-flex justify-content-start justify-content-md-end text-secondary timestamp-text"><%= post.formattedCreatedAt %></p>
                   </div>
 
 

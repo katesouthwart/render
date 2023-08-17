@@ -37,7 +37,7 @@ router.get("/", async (req, res) => {
         },
         {
           // $limit: 1
-          $sample: {size: 1}
+          $sample: {size: 50}
         }
       ]);
 
@@ -64,7 +64,8 @@ router.get("/", async (req, res) => {
         title: "Render - Discover",
         discoverableUsers: filteredUsers,
         currentUser,
-        currentUserDiscovered
+        currentUserDiscovered,
+        filteredUsersCount
       });
 
     } else {
@@ -92,9 +93,12 @@ router.post("/userchoice", async (req, res) => {
         following: viewedUser.id
       }
     });
-    console.log('following!');
   } else {
-    console.log('rejected');
+    await currentUser.updateOne({
+      $push: {
+        rejected: viewedUser.id
+      }
+    });
   }
   return res.status(200).json({
     success: true,
@@ -118,7 +122,6 @@ router.get("/:id/settings", async (req, res) => {
         });
 
       } else {
-        console.log(currentUser.id);
         const newDiscover = new Discover({
           user: currentUser.id,
           img1: "",
@@ -161,50 +164,43 @@ router.post("/:id/settings", async (req, res) => {
       //Image upload
       let imageUploadFile;
       let uploadPath;
-      let imageNames = [];
+      let imageNames = {};
       let currentImageName;
 
       if (!req.files || Object.keys(req.files).length === 0) {
         console.log("No files uploaded");
       } else {
-
-        let index = 0;
         for (const key in req.files) {
           if (Object.hasOwnProperty.call(req.files, key)) {
             const imageUploadFile = req.files[key];
             const newImageName = Date.now() + imageUploadFile.name + req.user.id;
-            imageNames.push(newImageName);
-            const uploadPath = path.resolve("./") + "/public/uploads/" + newImageName;
+            imageNames[key] = newImageName;
 
-            console.log(imageNames);
+            const uploadPath = path.resolve("./") + "/public/uploads/" + newImageName;
 
             imageUploadFile.mv(uploadPath, function(err) {
               if (err) {
-                console.log(err);
+
                 return res.status(500).send(err);
               }
             });
 
-            let currentImageName = card['img' + (index + 1)];
+            let currentImageName = card[key];
 
-            if (currentImageName !== "flame.PNG" && currentImageName !== newImageName) {
+            if (currentImageName !== "flame.PNG" && currentImageName !== newImageName && currentImageName != "") {
               const oldImagePath = path.resolve("./") + "/public/uploads/" + currentImageName;
               try {
-                fs.unlinkSync(oldImagePath);
-                console.log("Old image deleted:", oldImagePath);
+                if(oldImagePath) {
+                  fs.unlinkSync(oldImagePath);
+                }
               } catch (err) {
                 console.error("Error deleting old image:", err);
               }
             }
-            index++;
           }
         }
       }
-      const updateObj = {};
-      for (let i = 0; i < Math.min(6, imageNames.length); i++) {
-        updateObj[`img${i + 1}`] = imageNames[i];
-      }
-      const updateImg = await Discover.findByIdAndUpdate(card.id, updateObj);
+      const updateImg = await Discover.findByIdAndUpdate(card.id, imageNames);
       const savedImg = await updateImg.save();
 
       await card.updateOne({ $set: req.body});

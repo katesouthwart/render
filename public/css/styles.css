@@ -1,7 +1,7 @@
 body {
-  font-family: "Montserrat", sans-serif;
-  padding-top: 62px;
-  background-color: white;
+  margin-top: 50px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
 }
 
 a {
@@ -12,22 +12,42 @@ p {
   color: black;
 }
 
+h2 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+h3 {
+  font-family: "Lora", serif;
+}
+
+h5{
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+h6 {
+  font-family: "Lora", serif;
+}
 
 .heading-white-bg {
   color: #A75D5D;
 }
+
 
 /* .container-fluid {
   padding: 3% 15% 7%;
 } */
 /* Navigation Bar */
 .navbar-brand {
-  font-family: "ubuntu", sans-serif;
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
 }
 
 .navbar-custom {
   background-color: #A75D5D;
   color: white;
+  font-family: 'Poppins', sans-serif;
 }
 
 .navbar-custom:hover {
@@ -86,9 +106,90 @@ p {
   background-color: #A75D5D;
 }
 
+@media screen and (min-width: 992px) {
+  #title-area {
+    height: 100vh;
+  }
+}
+
+
+#home-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 5rem;
+  font-weight: 800;
+  color: white;
+}
+
+#home-subtitle {
+  font-family: 'Lora', serif;
+  font-size: 3.5rem;
+  font-weight: 400;
+  color: white;
+}
+
+
+.iphone-mockup {
+  height: 600px;
+  width: auto;
+}
+
+
+
+@media screen and (max-width: 1276px) {
+  .iphone-mockup {
+    height: 400px;
+    width: auto;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .iphone-mockup {
+    height: 600px;
+    width: auto;
+  }
+}
+
+
+.mockup-text {
+  color: #FFC3A1;
+}
+
 /* Features */
 #features {
   position: relative;
+}
+
+@media screen and (min-width: 992px) {
+  #features {
+    height: 400px
+  }
+}
+
+/* CTA */
+#cta {
+  position: relative;
+  background-color: #D3756B;
+}
+
+@media screen and (min-width: 992px) {
+  #cta {
+    height: 400px;
+  }
+}
+
+/* Contact */
+#contact {
+  position: relative;
+  height: 150px;
+}
+
+
+.footer-socials {
+  color: #A75D5D;
+}
+
+.footer-socials:hover {
+  color: #F0997D;
 }
 
 .features-icon {
@@ -231,6 +332,10 @@ p {
   font-size: 12px;
 }
 
+.joined-text {
+  font-size: 14px;
+}
+
 .like-button {
   border: none;
   background-color: transparent;
@@ -286,6 +391,7 @@ p {
 .form-label {
   color: #A75D5D;
   font-weight: bold;
+  font-family: 'Lora', serif;
 }
 
 .form-control:focus {
@@ -345,6 +451,7 @@ p {
 .profile-title {
   color: #A75D5D;
   transition: 150ms all;
+  font-family: 'Lora', serif;
 }
 
 .profile-title:hover {
@@ -439,6 +546,59 @@ p {
   box-shadow: none;
 }
 
+.btn-light:hover {
+  background-color: #F0997D;
+  border-color: #F0997D;
+  color: white;
+}
+
+.btn-light:focus {
+  background-color: #F0997D;
+  border-color: #F0997D;
+  box-shadow: none;
+  color: white;
+}
+
+
+.btn-info {
+  background-color: #D3756B;
+  border-color: #D3756B;
+  color: white;
+}
+
+
+.btn-info:hover {
+  background-color: #F0997D;
+  border-color: #F0997D;
+  color: white;
+}
+
+.btn-info:focus {
+  background-color: #F0997D;
+  border-color: #F0997D;
+  box-shadow: none;
+  color: white;
+}
+
+.btn-dark:hover {
+  background-color: #F0997D;
+  border-color: #F0997D;
+  color: white;
+}
+
+.btn-dark:focus {
+  background-color: #F0997D;
+  border-color: #F0997D;
+  box-shadow: none;
+  color: white;
+}
+
+.btn-get-started {
+  width: 336px;
+}
+
+
+
 .btn-outline-primary {
   color: #A75D5D;
   border-color: #A75D5D;
@@ -516,10 +676,11 @@ p {
 /* dicover */
 .tinder {
   width: 100vw;
-  height: 100vh;
+  min-height: 800px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: start;
   position: relative;
   opacity: 0;
   transition: opacity 0.1s ease-in-out;
@@ -549,7 +710,7 @@ p {
   margin-left: -50px;
 }
 
-.tinder_love .fa-heart {
+.tinder_love .fa-fire-flame-curved {
   opacity: 0.7;
   transform: scale(1);
 }
@@ -562,10 +723,10 @@ p {
 .tinder--cards {
   flex-grow: 1;
   padding-top: 40px;
-  text-align: center;
+  /* text-align: center; */
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: flex-start;
   z-index: 1;
 }
 
@@ -573,7 +734,6 @@ p {
   display: inline-block;
   width: 90vw;
   max-width: 400px;
-  height: 70vh;
   background: #FFFFFF;
   padding-bottom: 40px;
   border-radius: 8px;
@@ -584,6 +744,9 @@ p {
   cursor: -webkit-grab;
   cursor: -moz-grab;
   cursor: grab;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #fff0e8;
 }
 
 .moving.tinder--card {
@@ -606,9 +769,9 @@ p {
 }
 
 .tinder--card p {
-  margin-top: 24px;
+  /* margin-top: 24px; */
   font-size: 20px;
-  padding: 0 16px;
+  /* padding: 0 16px; */
   pointer-events: none;
 }
 
@@ -638,7 +801,14 @@ p {
 }
 
 .swipe-like {
-  color: #94B49F;
+  color: #F0997D;
+}
+
+#nope {
+  background-color: #fff0e8;
+}
+#love {
+  background-color: #fff0e8;
 }
 
 .swipe-reject {
@@ -656,8 +826,37 @@ p {
   align-items: center;
 }
 
-#username-change-failure-message, #email-failure-message {
+.discover-img {
+  height: 400px;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.discover-div {
+  border-bottom: 1px solid #fff0e8;
+}
+
+.discover-diet {
+  height: 24px;
+  background-color: #D3756B;
+  color: white;
+  border-radius: 8px;
+  font-size: 16px !important;
+}
+
+.discover-desc {
+  font-size: 16px !important;
+  text-align: left !important;
+}
+
+#username-change-failure-message, #email-failure-message, .login-text {
   font-size: 14px;
+}
+
+.username-link {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-weight: 400;
 }
 
 @media screen and (min-width: 400px) {

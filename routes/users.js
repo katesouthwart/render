@@ -249,18 +249,16 @@ router.get("/:username", async (req, res) => {
       }
 
       if (other.requestedBy && other.requestedBy.includes(currentUser.id)) {
-        console.log(true);
         other.alreadyRequested = true;
         alreadyRequested = true;
       } else {
-        console.log(currentUser.id);
         other.alreadyRequested = false;
         alreadyRequested = false;
       }
     }
 
     other.formattedJoinedAt = formatJoinedDate(other.createdAt);
-    console.log(paginatedResults);
+
 
     if (currentUser && currentUser.id === viewedUser.id) {
       res.render("profile", {

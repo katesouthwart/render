@@ -5,7 +5,7 @@
 
   <div class="row col-12 col-lg-10 mx-auto mb-5">
     <nav aria-label="breadcrumb">
-      <ol class="breadcrumb my-4">
+      <ol class="breadcrumb mt-5 mb-4">
         <li class="breadcrumb-item"><a href="/explore">Explore</a></li>
         <li class="breadcrumb-item"><a href="/<%= post.category %>"><%= post.category %> Recipes</a></li>
         <li class="breadcrumb-item active" aria-current="page"><%= post.title %></li>
@@ -62,12 +62,12 @@
           <div class="col-12 pb-3 d-flex align-items-center">
 
             <div class="col-8 d-flex justify-content-start">
-              <a href="/users/<%= author.username %>" class=" text-dark"><i class="fa-solid fa-user me-2 mb-3 profile-icon-color"></i><%= author.displayName %> <span class="text-secondary fw-light fst-italic ps-2 ">@<%= author.username %></span></a>
+              <a href="/users/<%= author.username %>" class=" text-dark"><i class="fa-solid fa-user me-2 mb-3 profile-icon-color"></i><%= author.displayName %> <span class="text-secondary fw-light fst-italic ps-2 username-link">@<%= author.username %></span></a>
               <% if (post.author.isPrivate === true) { %>
               <i class="fa-solid fa-sm fa-lock text-secondary ps-2 mt-2 pt-1"></i>
               <% } %>
             </div>
-            <p class="col-4 d-flex justify-content-end text-secondary mt-2 mt-lg-2"><%= post.formattedCreatedAt %></p>
+            <p class="col-4 d-flex justify-content-end text-secondary mt-2 mt-lg-2 timestamp-text"><%= post.formattedCreatedAt %></p>
           </div>
 
           <div class="col-12 pb-2 d-flex justify-content-between">

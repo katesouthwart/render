@@ -24,6 +24,7 @@ const MongoStore = require("connect-mongo");
 const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
+const https = require("https");
 
 dotenv.config();
 app.use(express.static("public"));
@@ -53,8 +54,8 @@ app.use(
     directives: {
       defaultSrc: ["'self'", 'ka-f.fontawesome.com'],
       scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'kit.fontawesome.com', 'https://code.jquery.com/jquery-3.7.0.min.js'],
-      styleSrc: ["'self'", "'unsafe-inline'", 'https://stackpath.bootstrapcdn.com', 'https://cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'use.fontawesome.com'],
-      fontSrc: ["'self'", 'https://stackpath.bootstrapcdn.com', 'https://cdnjs.cloudflare.com', 'use.fontawesome.com', 'ka-f.fontawesome.com'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://stackpath.bootstrapcdn.com', 'https://cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'use.fontawesome.com', 'https://fonts.googleapis.com'],
+      fontSrc: ["'self'", 'https://stackpath.bootstrapcdn.com', 'https://cdnjs.cloudflare.com', 'use.fontawesome.com', 'ka-f.fontawesome.com', 'https://fonts.gstatic.com'],
       imgSrc: ["'self'", 'data:', 'blob:'],
       objectSrc: ["'none'"],
       mediaSrc: ["'none'"],
@@ -146,10 +147,80 @@ app.get("/", (req, res) => {
     res.render("home");
   }
 });
-// 
-// app.get("/contact", (req, res) => {
-//   res.render("contact");
-// });
+
+app.post("/iosnewsletter", (req, res) => {
+  const firstName = req.body.fName;
+  const lastName = req.body.lName;
+  const email = req.body.email;
+
+  const data = {
+    email_address: email,
+    status: "subscribed",
+    merge_fields: {
+      FNAME: firstName,
+      LNAME: lastName
+    }
+  }
+
+  const jsonData = JSON.stringify(data);
+  const audienceID = process.env.MAILCHIMP_AUDIENCE_ID;
+  const options = {
+    method: "POST",
+    auth: process.env.MAILCHIMP_IOS_API_KEY
+  }
+
+  const url = process.env.MAILCHIMP_URL;
+  const request = https.request(url, options, response => {
+
+    response.on("data", data => {
+      if (response.statusCode === 200) {
+          return res.json({success: true, message: "Successfully subscribed."});
+      } else {
+        return res.json({success: false, message: "An error has occured."});
+      }
+    })
+  })
+
+  request.write(jsonData);
+  request.end();
+});
+
+app.post("/androidnewsletter", (req, res) => {
+  const firstName = req.body.androidFName;
+  const lastName = req.body.androidLName;
+  const email = req.body.androidEmail;
+
+  const data = {
+    email_address: email,
+    status: "subscribed",
+    merge_fields: {
+      FNAME: firstName,
+      LNAME: lastName
+    }
+  }
+
+  const jsonData = JSON.stringify(data);
+  const audienceID = process.env.MAILCHIMP_AUDIENCE_ID;
+  const options = {
+    method: "POST",
+    auth: process.env.MAILCHIMP_ANDROID_API_KEY
+  }
+
+  const url = process.env.MAILCHIMP_URL;
+  const request = https.request(url, options, response => {
+
+    response.on("data", data => {
+      if (response.statusCode === 200) {
+        return res.json({success: true, message: "Successfully subscribed."});
+      } else {
+        return res.json({success: false, message: "An error has occured."});
+      }
+    })
+  })
+
+  request.write(jsonData);
+  request.end();
+});
 
 
 app.listen(port, () => {

@@ -1,37 +1,185 @@
 <!-- TITLE -->
-<section id="title-area" class="pt-5">
+<section id="title-area" class=" d-flex align-items-center ">
 
-  <div class="row">
-    <div class="col-md-6 text-col-position text-start heading-left p-5">
-      <h1 class="big-heading fw-bold lh-base p-5">Start eating with your eyes.</h1>
-      <button type="button" class="btn btn-dark btn-lg mt-3 ms-5 me-3"><i class="fa-brands fa-apple"></i> Download</button>
-      <button type="button" class="btn btn-outline-light btn-lg mt-3"><i class="fa-brands fa-google-play"></i> Download</button>
+  <div class="d-flex col-12 align-items-center  flex-wrap">
+
+    <div class="col-12 col-lg-6 text-start px-5 my-5 d-flex flex-wrap text-center text-lg-start ms-lg-5 mx-auto">
+      <div class="col-12 ">
+        <h1 id="home-title" class="fw-bold lh-base">Render</h1>
+        <h3 id="home-subtitle" class="big-heading lh-base pb-3">Eat with your eyes.</h3>
+      </div>
+
+      <form class="d-flex col-12 mx-auto" action="/auth/register">
+      <button type="submit" class="btn btn-dark btn-get-started btn-lg mt-3 mx-auto mx-lg-0">Get Started</button>
+      </form>
+
+
+      <div class="col-12">
+        <button type="button" class="btn btn-info btn-lg mt-3 me-3" data-bs-toggle="modal" data-bs-target="#apple-newsletter-modal"><i class="fa-brands fa-apple"></i> Download</button>
+        <button type="button" class="btn btn-light heading-white-bg btn-lg mt-3" data-bs-toggle="modal" data-bs-target="#google-newsletter-modal"><i class="fa-brands fa-google-play"></i> Download</button>
+
+      </div>
+
+      <!-- apple newsletter modal -->
+      <div class="modal fade" id="apple-newsletter-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+
+            <div class="modal-header d-flex flex-wrap">
+              <div class="d-flex col-12 justify-content-end">
+                <button type="button" class="close x-btn" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="col-12 mx-auto justify-content-center d-flex">
+                  <h3 class="modal-title fw-bold" id="modal-title">iOS App Coming Soon.</h3>
+              </div>
+
+            </div>
+
+            <div class="modal-body py-0">
+              <p class="text-secondary text-center">There's much more in store for Render.</p>
+              <p class="text-secondary text-center px-5">Sign up below for the latest updates on our iOS app and upcoming features.</p>
+            </div>
+
+            <div class="col-12 modal-footer justify-content-center form-signin mx-auto">
+
+                <form action="/iosnewsletter" method="post" class="w-75" id="ios-newsletter-form">
+
+                  <div class="form-floating">
+                    <input type="text" name="fName" class="form-control top mb-3" id="iosFirstName" placeholder="First Name" required autofocus>
+                    <label for="iosFirstName">First Name</label>
+                  </div>
+                  <div class="form-floating">
+                    <input type="text" name="lName" class="form-control middle mb-3" id="iosLastName" placeholder="Last Name" required>
+                    <label for="iosLastName">Last Name</label>
+                  </div>
+                  <div class="form-floating">
+                    <input type="email" name="email" class="form-control bottom mb-3" id="iosEmail" placeholder="name@example.com" required>
+                    <label for="iosEmail">Email</label>
+                  </div>
+                  <div class="text-center">
+                    <button class="w-50 mb-5 btn btn-lg btn-primary" type="button" onclick="iosModalAlert()">Sign me up!</button>
+                  </div>
+                </form>
+
+                <div id="ios-newsletter-success" class="col-12 d-none bg-success mb-3 p-3 text-center">
+                  <p class="mb-0 text-white">
+                    Newsletter signup successful.
+                  </p>
+                </div>
+                <div id="ios-newsletter-failure" class="col-12 d-none bg-danger mb-3 p-3 text-center text-white">
+                  <p class="mb-0">
+                    An error has occured. Please try again later.
+                  </p>
+                </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- android newsletter modal -->
+      <div class="modal fade" id="google-newsletter-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+
+            <div class="modal-header d-flex flex-wrap">
+              <div class="d-flex col-12 justify-content-end">
+                <button type="button" class="close x-btn" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="col-12 mx-auto justify-content-center d-flex">
+                  <h3 class="modal-title fw-bold" id="modal-title">Android App Coming soon.</h3>
+              </div>
+
+            </div>
+
+            <div class="modal-body py-0">
+              <p class="text-secondary text-center">There's much more in store for Render.</p>
+              <p class="text-secondary text-center px-5">Sign up below for the latest updates on our Android app and upcoming features.</p>
+            </div>
+
+            <div class="col-12 modal-footer justify-content-center form-signin mx-auto ">
+
+                <form action="/androidnewsletter" method="post" id="android-newsletter-form" class="w-75 d-inline">
+
+                  <div class="form-floating">
+                    <input type="text" name="androidFName" class="form-control top mb-3" id="androidFirstName" placeholder="First Name" required autofocus>
+                    <label for="androidFirstName">First Name</label>
+                  </div>
+                  <div class="form-floating">
+                    <input type="text" name="androidLName" class="form-control middle mb-3" id="androidLastName" placeholder="Last Name" required>
+                    <label for="androidLastName">Last Name</label>
+                  </div>
+                  <div class="form-floating">
+                    <input type="email" name="androidEmail" class="form-control bottom mb-3" id="androidEmail" placeholder="name@example.com" required>
+                    <label for="androidEmail">Email</label>
+                  </div>
+                  <div class="text-center">
+                    <button class="w-50 mb-5 btn btn-lg btn-primary" type="button" onclick="androidModalAlert()">Sign me up!</button>
+                  </div>
+                </form>
+
+                <div id="android-newsletter-success" class="col-12 d-none bg-success mb-3 p-3 text-center">
+                  <p class="mb-0 text-white">
+                    Newsletter signup successful.
+                  </p>
+                </div>
+                <div id="android-newsletter-failure" class="col-12 d-none bg-danger mb-3 p-3 text-center text-white">
+                  <p class="mb-0">
+                    An error has occured. Please try again later.
+                  </p>
+                </div>
+
+            </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+
+
     </div>
-    <div class="col-md-6 title-image-position">
-      <!-- <img class="title-img" src="" alt="iphone-mockup"> -->
+
+    <div class="col-6 col-lg-5 d-flex mx-auto d-flex h-100 align-items-center flex-wrap">
+      <img class="iphone-mockup mb-5 mx-auto mx-lg-0 col-12 col-lg-6" src="/img/iphonemockup.png" alt="iphone-mockup">
+      <h6 class="fst-italic text-break col-9 col-lg-4 mockup-text text-center text-lg-start mb-5 mx-auto mx-lg-0">Find inspiration from other chefs like never before with <span class="fw-bold fst-normal">DISCOVER</span>.</h6>
     </div>
+
+
+  </div>
+
+
+
+
+
   </div>
 
 </section>
 
 <!-- FEATURES -->
-<section id="features" class="">
+<section id="features" class="d-flex col-12 mx-auto p-5 p-md-0 bg-white text-center align-items-center justify-content-center">
 
-  <div class="row container mx-auto p-5 bg-white text-center">
+  <div class="col-12 d-flex flex-wrap mx-auto p-5 bg-white text-center justify-content-center">
 
-    <div class="col-md-4 p-md-3 my-4">
+    <div class="col-12 col-md-4 col-xl-3 p-md-3  mx-xl-3 my-4">
       <i class="fa-solid fa-bolt fa-4x features-icon"></i>
       <h3 class="fw-bold fs-5 pt-3">Discover.</h3>
       <p class="feature-description fs-6">Eat with your eyes first, and discover recipes from creators around the world.</p>
     </div>
 
-    <div class="col-md-4 p-md-3 my-4">
+    <div class="col-12 col-md-4 col-xl-3 p-md-3  mx-xl-3  my-4">
       <i class="fa-solid fa-magnifying-glass fa-4x features-icon"></i>
       <h3 class="fw-bold fs-5 pt-3">Explore.</h3>
       <p class="feature-description fs-6">Have an idea of what you're looking for? Explore our community of recipes and creators.</p>
     </div>
 
-    <div class="col-md-4 p-md-3 my-4">
+    <div class="col-12 col-md-4 col-xl-3 p-md-3 mx-xl-3  my-4">
       <i class="fa-solid fa-fire-flame-curved fa-4x features-icon"></i>
       <h3 class="fw-bold fs-5 pt-3">Render.</h3>
       <p class="feature-description fs-6">Cut the fat out of searching for recipes, and render a feed to your liking.</p>
@@ -43,24 +191,30 @@
 
 
 <!-- CALL TO ACTION -->
-<section id="cta">
+<section id="cta" class="d-flex align-items-center">
+  <div class="d-flex flex-wrap col-12 mx-auto">
+    <h3 class="fw-bold big-heading lh-base text-white col-12 p-5 text-center">Start eating with your eyes today.</h3>
+    <div class="col-12 d-flex justify-content-center">
+      <form class="d-flex text-center" action="/auth/register">
+      <button type="submit" class="btn btn-dark btn-get-started btn-lg mt-3">Get Started</button>
+      </form>
+    </div>
 
-  <h3 class="fw-bold big-heading lh-base text-white">Start eating with your eyes today.</h3>
-  <button type="button" class="btn btn-dark btn-lg mt-3 me-2"><i class="fa-brands fa-apple"></i> Download</button>
-  <button type="button" class="btn btn-light btn-lg mt-3"><i class="fa-brands fa-google-play"></i> Download</button>
+    <div class="col-12 text-center mb-5">
+      <button type="button" data-bs-toggle="modal" data-bs-target="#apple-newsletter-modal" class="btn btn-primary btn-lg mt-3 me-3"><i class="fa-brands fa-apple"></i> Download</button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#google-newsletter-modal" class="btn btn-light btn-lg mt-3 heading-white-bg"><i class="fa-brands fa-google-play"></i> Download</button>
+    </div>
+  </div>
+
 
 </section>
 
 <!-- FOOTER -->
-<section id="contact" class="">
-
-  <div class="footer-socials text-dark pb-3">
-    <i class="fa-brands fa-twitter p-2"></i>
-    <i class="fa-brands fa-facebook p-2"></i>
-    <i class="fa-brands fa-instagram p-2"></i>
-    <i class="fa-solid fa-envelope p-2"></i>
+<section id="contact" class=" d-flex align-items-center justify-content-center">
+  <div class="">
+    <a href="mailto:rendersocialapp@gmail.com" class="footer-socials"><i class="fa-solid fa-lg fa-envelope p-3"></i></a>
+    <a href="https://www.instagram.com/rendersocial.io/" class="footer-socials"><i class="fa-brands fa-lg fa-instagram p-3"></i></a>
+    <a href="https://www.tiktok.com/@rendersocial" class="footer-socials"><i class="fa-brands fa-lg fa-tiktok p-3"></i></a>
+    <a href="https://twitter.com/rendersocialapp" class="footer-socials"><i class="fa-brands fa-lg fa-x-twitter p-3"></i></a>
   </div>
-
-
-
 </section>

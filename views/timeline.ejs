@@ -1,9 +1,9 @@
-<div class="container">
+<div class="container mt-5">
   <div class="row">
     <div class="col-12 col-md-9 mx-auto mb-5">
 
-      <div class="col-12 d-flex  py-4  flex-wrap">
-          <div class="col-12 d-flex justify-content-center">
+      <div class="col-12 d-flex  py-5  flex-wrap">
+          <div class="col-12 d-flex pt-2 justify-content-center">
             <h6>Hey, <%= currentUser.displayName %>!</h6>
           </div>
           <div class="col-12 d-flex justify-content-center pb-2">
@@ -42,7 +42,7 @@
 
                   <div class="d-flex col-11 justify-content-between flex-wrap">
                     <h4 class="mb-0 col-12 col-md-9"><a href="/posts/<%= post.id %>" class="profile-title"><%= post.title %></a></h4>
-                    <p class="mb-0 col-12 col-md-3 d-flex justify-content-start justify-content-md-end text-secondary"><%= post.formattedCreatedAt %></p>
+                    <p class="mb-0 col-12 col-md-3 d-flex justify-content-start justify-content-md-end text-secondary timestamp-text"><%= post.formattedCreatedAt %></p>
 
                   </div>
 
@@ -76,7 +76,8 @@
                         </div>
                   </div>
                   <div class="col-12 col-md-12 d-flex align-items-center justify-content-start">
-                    <a href="/users/<%= post.author.username %>" class="mb-0 d-flex justify-content-start justify-content-md-start text-dark align-items-start"><i class="fa-solid fa-user me-2 profile-icon-color pt-1"></i><%= post.author.displayName %><span class="text-secondary fw-light fst-italic ps-2 ">@<%= post.author.username %></span></a>
+                    <a href="/users/<%= post.author.username %>" class="mb-0 d-flex justify-content-start justify-content-md-start text-dark align-items-start pt-1"><i class="fa-solid fa-user me-2 profile-icon-color pt-1"></i><%= post.author.displayName %></a>
+                    <a href="/users/<%= post.author.username %>" class="text-secondary fw-light username-link ps-2 ">@<%= post.author.username %></a>
                     <% if (post.author.isPrivate === true) { %>
                     <i class="fa-solid fa-sm fa-lock text-secondary ps-2"></i>
                     <% } %>
@@ -143,11 +144,12 @@
                   <div class="d-flex flex-wrap col-12 my-3 my-md-0">
                     <div class="d-flex col-11 justify-content-between flex-wrap">
                       <h4 class="mb-0 col-12 col-md-9"><a href="/posts/<%= post.id %>" class="profile-title"><%= post.title %></a></h4>
-                      <p class="mb-0 col-12 col-md-3 d-flex justify-content-start justify-content-md-end text-secondary"><%= post.formattedCreatedAt %></p>
+                      <p class="mb-0 col-12 col-md-3 d-flex justify-content-start justify-content-md-end text-secondary timestamp-text"><%= post.formattedCreatedAt %></p>
 
                     </div>
                     <div class="col-12 col-md-12 d-flex align-items-center justify-content-start">
-                      <a href="/users/<%= post.author.username %>" class="mb-0 d-flex justify-content-start justify-content-md-start text-dark align-items-start"><i class="fa-solid fa-user me-2 profile-icon-color pt-1"></i><%= post.author.displayName %><span class="text-secondary fw-light fst-italic ps-2 ">@<%= post.author.username %></span></a>
+                      <a href="/users/<%= post.author.username %>" class="mb-0 d-flex justify-content-start justify-content-md-start text-dark align-items-start pt-1"><i class="fa-solid fa-user me-2 profile-icon-color pt-1"></i><%= post.author.displayName %></a>
+                      <a href="/users/<%= post.author.username %>" class="text-secondary fw-light username-link ps-2 ">@<%= post.author.username %></a>
                       <% if (post.author.isPrivate === true) { %>
                       <i class="fa-solid fa-sm fa-lock text-secondary ps-2"></i>
                       <% } %>

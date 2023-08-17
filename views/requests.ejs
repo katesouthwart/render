@@ -1,8 +1,8 @@
 <div class="container">
   <div class="row">
-    <div class="col-12 col-lg-8 mx-auto mb-5">
+    <div class="col-12 col-lg-8 mx-auto mb-5 mt-2">
 
-      <h2 class="heading-white-bg py-3">Follower Requests</h2>
+      <h3 class="heading-white-bg pt-5 fw-bold">Follower Requests</h3>
 
       <div class="row py-4" id="requests-container">
 
@@ -18,7 +18,13 @@
             </div>
 
             <div class="col-11 ps-3 d-flex justify-content-between flex-wrap">
-              <a href="/users/<%= user.id %>" class="form-label profile-followers"><h5><%= user.username %></h5></a>
+              <div class="d-flex">
+                <a href="/users/<%= user.username %>" class="mb-0 d-flex justify-content-start justify-content-md-start text-dark align-items-start pt-1"><i class="fa-solid fa-user me-2 profile-icon-color pt-1"></i><%= user.displayName %></a>
+                <a href="/users/<%= user.username %>" class="text-secondary fw-light username-link ps-2 pt-1">@<%= user.username %></a>
+                <% if (user.isPrivate === true) { %>
+                <i class="fa-solid fa-sm fa-lock text-secondary ps-2"></i>
+                <% } %>
+              </div>
 
               <div class="d-flex justify-content-end">
                 <div class="me-3">

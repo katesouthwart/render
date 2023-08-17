@@ -9,6 +9,7 @@ $(document).ready(function() {
 
       if (!newCards.length){
         console.log("Out of cards");
+        $('#out-of-cards').removeClass('d-none').addClass('d-inline');
         return
       }
 
@@ -41,7 +42,7 @@ $(document).ready(function() {
         const yMulti = event.deltaY / 80;
         const rotate = xMulti * yMulti;
 
-        $(event.target).css('transform', 'translate(' + event.deltaX + 'px, ' + event.deltaY + 'px) rotate(' + rotate + 'deg)');
+        $(event.target).closest(".tinder--card").css('transform', 'translate(' + event.deltaX + 'px, ' + event.deltaY + 'px) rotate(' + rotate + 'deg)');
       });
 
       hammertime.on('panend', function(event) {
@@ -52,10 +53,10 @@ $(document).ready(function() {
         const moveOutWidth = $('body').width();
         const keep = Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.5;
 
-        $(event.target).toggleClass('removed', !keep);
+        $(event.target).closest(".tinder--card").toggleClass('removed', !keep);
 
         if (keep) {
-          $(event.target).css('transform', '');
+          $(event.target).closest(".tinder--card").css('transform', '');
         } else {
           const endX = Math.max(Math.abs(event.velocityX) * moveOutWidth, moveOutWidth);
           const toX = event.deltaX > 0 ? endX : -endX;
@@ -65,7 +66,7 @@ $(document).ready(function() {
           const yMulti = event.deltaY / 80;
           const rotate = xMulti * yMulti;
 
-          $(event.target).css('transform', 'translate(' + toX + 'px, ' + (toY + event.deltaY) + 'px) rotate(' + rotate + 'deg)');
+          $(event.target).closest(".tinder--card").css('transform', 'translate(' + toX + 'px, ' + (toY + event.deltaY) + 'px) rotate(' + rotate + 'deg)');
 
           // swiped to the right - follow
           if(event.deltaX > 0) {

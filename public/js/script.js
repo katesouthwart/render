@@ -301,7 +301,7 @@ function checkPassword() {
       console.log(res);
       if(res.success == true) {
         $('#password-failure').removeClass('d-inline').addClass('d-none');
-        $('#upassword-success').removeClass('d-none').addClass('d-inline');
+        $('#password-success').removeClass('d-none').addClass('d-inline');
         $('#saveUserButton').removeClass('btn-outline-disabled').addClass('btn-primary').prop("disabled", false);
         $('#registerButton').removeClass('btn-outline-disabled').addClass('btn-primary').prop("disabled", false);
       } else {
@@ -423,3 +423,71 @@ $(document).ready(function() {
     $("#email").val(lowercaseEmail);
   })
 });
+
+
+//android newsletter
+function androidModalAlert() {
+  console.log('sending');
+  const firstName = $('#androidFirstName').val();
+  const lastName = $('#androidLastName').val();
+  const email = $('#androidEmail').val();
+
+  $.ajax({
+    url: `/androidnewsletter`,
+    method: "POST",
+    data: {
+      androidFName: firstName,
+      androidLName: lastName,
+      androidEmail: email
+    },
+    success: function(res) {
+      console.log(res);
+      if(res.success == true) {
+        $('#android-newsletter-failure').removeClass('d-inline').addClass('d-none');
+        $('#android-newsletter-success').removeClass('d-none').addClass('d-inline');
+        $('#android-newsletter-form').removeClass('d-inline').addClass('d-none');
+      } else {
+        $('#android-newsletter-success').removeClass('d-inline').addClass('d-none');
+        $('#android-newsletter-failure').removeClass('d-none').addClass('d-inline');
+        $('#android-newsletter-form').removeClass('d-inline').addClass('d-none');
+      }
+    },
+    error: function(err) {
+      console.log("Error:", err);
+    }
+  });
+}
+
+
+//ios newsletter
+function iosModalAlert() {
+  console.log('sending');
+  const firstName = $('#iosFirstName').val();
+  const lastName = $('#iosLastName').val();
+  const email = $('#iosEmail').val();
+
+  $.ajax({
+    url: `/iosnewsletter`,
+    method: "POST",
+    data: {
+      fName: firstName,
+      lName: lastName,
+      email: email
+    },
+    success: function(res) {
+      // console.log(res);
+      if(res.success == true) {
+        $('#ios-newsletter-failure').removeClass('d-inline').addClass('d-none');
+        $('#ios-newsletter-success').removeClass('d-none').addClass('d-inline');
+        $('#ios-newsletter-form').removeClass('d-inline').addClass('d-none');
+      } else {
+        $('#ios-newsletter-success').removeClass('d-inline').addClass('d-none');
+        $('#ios-newsletter-failure').removeClass('d-none').addClass('d-inline');
+        $('#ios-newsletter-form').removeClass('d-inline').addClass('d-none');
+      }
+    },
+    error: function(err) {
+      console.log("Error:", err);
+    }
+  });
+}
