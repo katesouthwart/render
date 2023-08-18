@@ -1,5 +1,5 @@
 const express = require("express");
-const port = process.env.PORT || 3000;
+const port = 3000;
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -223,6 +223,6 @@ app.post("/androidnewsletter", (req, res) => {
 });
 
 
-app.listen(port, () => {
-  console.log("Server is listening on port" + port + ".");
+app.listen(process.env.PORT || port, () => {
+  console.log("Server is running on port 3000.");
 });

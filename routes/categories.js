@@ -113,16 +113,48 @@ router.delete("/:name", async (req, res) => {
 //   try {
 //     await Category.insertMany([
 //       {
-//         "name": "British",
-//         "icon": "fas fa-bread-slice",
+//         "name": "American",
+//         "icon": "fas fa-burger",
+//       },
+//       {
+//         "name": "Mexican",
+//         "icon": "fas fa-pepper-hot",
+//       },
+//       {
+//         "name": "Mediterranean",
+//         "icon": "fas fa-lemon",
+//       },
+//       {
+//         "name": "Italian",
+//         "icon": "fas fa-pizza-slice",
+//       },
+//       {
+//         "name": "Dessert",
+//         "icon": "fas fa-cookie",
+//       },
+//       {
+//         "name": "Chinese",
+//         "icon": "fas fa-bowl-rice",
 //       },
 //       {
 //         "name": "French",
 //         "icon": "fas fa-cheese",
 //       },
+//       {
+//         "name": "British",
+//         "icon": "fas fa-bread-slice",
+//       },
+//       {
+//         "name": "Indian",
+//         "icon": "fas fa-bowl-food",
+//       },
+//       {
+//         "name": "Cocktails",
+//         "icon": "fas fa-martini-glass",
+//       },
 //
 //     ]);
-//
+// 
 //   } catch (err) {
 //     console.log(err);
 //   }
