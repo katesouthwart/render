@@ -9,7 +9,6 @@ $(document).ready(function() {
       const newCards = $('.tinder--card:not(.removed)');
 
       if (!newCards.length){
-        console.log("Out of cards");
         $('#out-of-cards').removeClass('d-none').addClass('d-inline');
         return
       }
@@ -19,6 +18,9 @@ $(document).ready(function() {
         $(card).css('transform', 'scale(' + (20 - index) / 20 + ') translateY(-' + 30 * index + 'px)');
         $(card).css('opacity', (10 - index) / 10);
       });
+
+      // get user id for swipe
+      userId = newCards.first().data("user-id");
 
       tinderContainer.addClass('loaded');
     }
@@ -72,26 +74,24 @@ $(document).ready(function() {
 
           // swiped to the right - follow
           if(event.deltaX > 0) {
-            createButtonListener(true)(event, 'follow', userId);
+            sendUserChoice("follow", userId);
           } else {
             // swiped to the left, reject
-            createButtonListener(false)(event, 'reject', userId);
+            sendUserChoice("reject", userId);
           }
-
-
-          initCards();
         }
       });
     });
 
-    function createButtonListener(love, choice, id) {
-      return function(event, choice, id) {
+    function createButtonListener(love, choice) {
+      return function(event) {
         const cards = $('.tinder--card:not(.removed)');
+
+        // get user id based on card
+        userId = cards.first().data("user-id");
+
         const moveOutWidth = $('body').width() * 1.5;
-
-        sendUserChoice(choice, id);
-
-        return;
+        sendUserChoice(choice, userId);
 
         if (!cards.length) {
         return false;
@@ -99,21 +99,20 @@ $(document).ready(function() {
 
         const card = cards.first();
 
-
         if (love) {
           card.css('transform', 'translate(' + moveOutWidth + 'px, -100px) rotate(-30deg)');
+          card.addClass("removed");
         } else {
           card.css('transform', 'translate(-' + moveOutWidth + 'px, -100px) rotate(30deg)');
+          card.addClass("removed");
         }
-
-        initCards();
 
         event.preventDefault();
       };
     }
 
-    nope.on('click',createButtonListener(false, 'reject', userId));
-    love.on('click', createButtonListener(true, 'follow', userId));
+    nope.on('click', createButtonListener(false, 'reject'));
+    love.on('click', createButtonListener(true, 'follow'));
 
     function sendUserChoice(choice, id) {
       $.ajax({
