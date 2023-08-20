@@ -3,6 +3,7 @@ $(document).ready(function() {
     const allCards = $('.tinder--card');
     const nope = $('#nope');
     const love = $('#love');
+    let userId;
 
     function initCards() {
       const newCards = $('.tinder--card:not(.removed)');
@@ -54,7 +55,7 @@ $(document).ready(function() {
         const keep = Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.5;
 
         $(event.target).closest(".tinder--card").toggleClass('removed', !keep);
-        let userId = $(event.target).closest(".tinder--card").data("user-id");
+        userId = $(event.target).closest(".tinder--card").data("user-id");
 
         if (keep) {
           $(event.target).closest(".tinder--card").css('transform', '');
@@ -111,8 +112,8 @@ $(document).ready(function() {
       };
     }
 
-    nope.on('click',createButtonListener(false));
-    love.on('click', createButtonListener(true));
+    nope.on('click',createButtonListener(false, 'reject', userId));
+    love.on('click', createButtonListener(true, 'follow', userId));
 
     function sendUserChoice(choice, id) {
       $.ajax({
