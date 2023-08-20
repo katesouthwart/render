@@ -400,8 +400,8 @@ router.get("/:id", async (req, res) => {
 //Get all following / timeline postSchema
 router.get("/timeline/all", async (req, res) => {
   try {
-
     if (req.user) {
+      console.log(req.user);
       const currentUser = await User.findById(req.user.id);
       const currentUserPosts = await Post.find({ author: currentUser.id }).populate("author");
       const friendPosts = await Promise.all(
