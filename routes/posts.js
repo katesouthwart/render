@@ -400,61 +400,67 @@ router.get("/:id", async (req, res) => {
 //Get all following / timeline postSchema
 router.get("/timeline/all", async (req, res) => {
   try {
-    const currentUser = await User.findById(req.user.id);
-    const currentUserPosts = await Post.find({ author: currentUser.id }).populate("author");
-    const friendPosts = await Promise.all(
-      currentUser.following.map((friendId) => {
-        return Post.find({ author: friendId }).populate("author");
-      })
-    );
 
-    let allPosts = [...currentUserPosts, ...friendPosts.flat()];
-    allPosts = allPosts.sort((a, b) => b.createdAt - a.createdAt);
+    if (req.user) {
+      const currentUser = await User.findById(req.user.id);
+      const currentUserPosts = await Post.find({ author: currentUser.id }).populate("author");
+      const friendPosts = await Promise.all(
+        currentUser.following.map((friendId) => {
+          return Post.find({ author: friendId }).populate("author");
+        })
+      );
 
-    for (const post of allPosts) {
-      let comments = await Comment.find({ parentPost: post.id });
-      post.commentCount = comments.length;
+      let allPosts = [...currentUserPosts, ...friendPosts.flat()];
+      allPosts = allPosts.sort((a, b) => b.createdAt - a.createdAt);
 
-      post.formattedCreatedAt = formatTimestamp(post.createdAt);
+      for (const post of allPosts) {
+        let comments = await Comment.find({ parentPost: post.id });
+        post.commentCount = comments.length;
+
+        post.formattedCreatedAt = formatTimestamp(post.createdAt);
+      }
+
+      // Pagination
+      const currentPage = parseInt(req.query.page) || 1;
+      const pageSize = 10;
+
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = currentPage * pageSize;
+      const paginatedResults = {};
+      paginatedResults.results = allPosts.slice(startIndex, endIndex);
+
+      // Find all posts that include the user's ID in the likes array
+      const alreadyLikedPosts = await Post.find({ "likes.user": req.user.id });
+
+      const likedPostIds = alreadyLikedPosts.map(post => post._id.toString());
+      paginatedResults.results.forEach(post => {
+        post.alreadyLiked = likedPostIds.includes(post._id.toString());
+      });
+
+      const alreadyLiked = paginatedResults.results.map(post => post.alreadyLiked);
+
+      // Find all posts that include the user's ID in the saves array
+      const alreadySavedPosts = await Post.find({ "saves.user": req.user.id });
+
+      const savedPostIds = alreadySavedPosts.map(post => post._id.toString());
+      paginatedResults.results.forEach(post => {
+        post.alreadySaved = savedPostIds.includes(post._id.toString());
+      });
+
+      const alreadySaved = paginatedResults.results.map(post => post.alreadySaved);
+
+      res.render("timeline", {
+        title: "Render - Timeline",
+        paginatedResults,
+        currentPage,
+        currentUser,
+        alreadyLiked,
+        alreadySaved
+      });
+    } else {
+      res.redirect("/auth/login");
     }
 
-    // Pagination
-    const currentPage = parseInt(req.query.page) || 1;
-    const pageSize = 10;
-
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = currentPage * pageSize;
-    const paginatedResults = {};
-    paginatedResults.results = allPosts.slice(startIndex, endIndex);
-
-    // Find all posts that include the user's ID in the likes array
-    const alreadyLikedPosts = await Post.find({ "likes.user": req.user.id });
-
-    const likedPostIds = alreadyLikedPosts.map(post => post._id.toString());
-    paginatedResults.results.forEach(post => {
-      post.alreadyLiked = likedPostIds.includes(post._id.toString());
-    });
-
-    const alreadyLiked = paginatedResults.results.map(post => post.alreadyLiked);
-
-    // Find all posts that include the user's ID in the saves array
-    const alreadySavedPosts = await Post.find({ "saves.user": req.user.id });
-
-    const savedPostIds = alreadySavedPosts.map(post => post._id.toString());
-    paginatedResults.results.forEach(post => {
-      post.alreadySaved = savedPostIds.includes(post._id.toString());
-    });
-
-    const alreadySaved = paginatedResults.results.map(post => post.alreadySaved);
-
-    res.render("timeline", {
-      title: "Render - Timeline",
-      paginatedResults,
-      currentPage,
-      currentUser,
-      alreadyLiked,
-      alreadySaved
-    });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
