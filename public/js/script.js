@@ -194,17 +194,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
   var roundedRating = window.roundedRating;
 
-
-  for (var i = 1; i <= 5; i++) {
-    var starElement = document.querySelector('.star-' + i);
-    if (i <= roundedRating) {
-      starElement.classList.remove('far');
-      starElement.classList.add('fas');
-    } else {
-      starElement.classList.remove('fas');
-      starElement.classList.add('far');
+  if(roundedRating) {
+    for (var i = 1; i <= 5; i++) {
+      var starElement = document.querySelector('.star-' + i);
+      if (i <= roundedRating) {
+        starElement.classList.remove('far');
+        starElement.classList.add('fas');
+      } else {
+        starElement.classList.remove('fas');
+        starElement.classList.add('far');
+      }
     }
   }
+
 });
 
 //Individual rating display on comments
@@ -213,16 +215,19 @@ document.addEventListener('DOMContentLoaded', function() {
   var individualRating = window.individualRating;
 
 
-  for (var i = 1; i <= 5; i++) {
-    var starElement = document.querySelector('.star-' + i);
-    if (i <= roundedRating) {
-      starElement.classList.remove('far');
-      starElement.classList.add('fas');
-    } else {
-      starElement.classList.remove('fas');
-      starElement.classList.add('far');
+  if(individualRating) {
+    for (var i = 1; i <= 5; i++) {
+      var starElement = document.querySelector('.star-' + i);
+      if (i <= individualRating) {
+        starElement.classList.remove('far');
+        starElement.classList.add('fas');
+      } else {
+        starElement.classList.remove('fas');
+        starElement.classList.add('far');
+      }
     }
   }
+
 });
 
 //Follow button script

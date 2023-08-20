@@ -54,6 +54,7 @@ $(document).ready(function() {
         const keep = Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.5;
 
         $(event.target).closest(".tinder--card").toggleClass('removed', !keep);
+        let userId = $(event.target).closest(".tinder--card").data("user-id");
 
         if (keep) {
           $(event.target).closest(".tinder--card").css('transform', '');
@@ -70,10 +71,10 @@ $(document).ready(function() {
 
           // swiped to the right - follow
           if(event.deltaX > 0) {
-            createButtonListener(true)(event);
+            createButtonListener(true)(event, 'follow', userId);
           } else {
             // swiped to the left, reject
-            createButtonListener(false)(event);
+            createButtonListener(false)(event, 'reject', userId);
           }
 
 
@@ -82,32 +83,31 @@ $(document).ready(function() {
       });
     });
 
-    function createButtonListener(love) {
-      return function(event) {
+    function createButtonListener(love, choice, id) {
+      return function(event, choice, id) {
         const cards = $('.tinder--card:not(.removed)');
         const moveOutWidth = $('body').width() * 1.5;
-        let choice;
 
-        if (!cards.length) return false;
+        sendUserChoice(choice, id);
+
+        return;
+
+        if (!cards.length) {
+        return false;
+        }
 
         const card = cards.first();
-        const id = card.data('user-id');
 
-        card.addClass('removed');
 
         if (love) {
           card.css('transform', 'translate(' + moveOutWidth + 'px, -100px) rotate(-30deg)');
-          choice = 'follow';
         } else {
           card.css('transform', 'translate(-' + moveOutWidth + 'px, -100px) rotate(30deg)');
-          choice = 'reject';
         }
 
         initCards();
 
         event.preventDefault();
-
-        sendUserChoice(choice, id);
       };
     }
 
