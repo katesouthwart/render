@@ -116,6 +116,7 @@ async function(accessToken, refreshToken, profile, cb) {
     });
 
     newUser.username = "user" + newUser._id;
+    newUser.usernameLower = "user" + newUser._id;
 
     await newUser.save();
     return cb(null, newUser);
